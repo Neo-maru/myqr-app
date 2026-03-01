@@ -45,9 +45,9 @@ pip install -r requirements.txt
 ```bash
 uvicorn main:app --reload
 ```
-# ブラウザで http://localhost:8000/ にアクセス
+### ブラウザで http://localhost:8000/ にアクセス
 
-# 終了後はCtrl + C
+### 終了後はCtrl + C
 
 ---
 
@@ -59,6 +59,6 @@ pip install -r requirements.txt
 uvicorn main:app --reload
 ```
 
-# ブラウザで http://localhost:8000/ にアクセス
+### ブラウザで http://localhost:8000/ にアクセス
 
-# 終了後はCtrl + C
+### 終了後はCtrl + C
