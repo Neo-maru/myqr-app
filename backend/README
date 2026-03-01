@@ -45,3 +45,20 @@ pip install -r requirements.txt
 ```bash
 uvicorn main:app --reload
 ```
+# ブラウザで http://localhost:8000/ にアクセス
+
+# 終了後はCtrl + C
+
+---
+
+# 2回目以降の起動
+```bash
+cd backend
+source venv/bin/activate（Windowsの場合はvenv\Scripts\activate）
+pip install -r requirements.txt
+uvicorn main:app --reload
+```
+
+# ブラウザで http://localhost:8000/ にアクセス
+
+# 終了後はCtrl + C
