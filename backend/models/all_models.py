@@ -22,6 +22,8 @@ class Product(Base):
     product_name = Column(String, nullable=False)
     category = Column(Integer, nullable=False)  # types.id
     brand = Column(Integer, nullable=True)      # types.id
+    store_recommend = Column(Integer, default=0, nullable=False)
+    price = Column(Integer, nullable=False)
 
 # --- 3. ProductTag (商品タグ) ---
 class ProductTag(Base):
