@@ -19,7 +19,7 @@ class User(Base):
 class Product(Base):
     __tablename__ = "products"
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, nullable=False)
+    product_name = Column(String, nullable=False)
     category = Column(Integer, nullable=False)  # types.id
     brand = Column(Integer, nullable=True)      # types.id
 
@@ -28,7 +28,7 @@ class ProductTag(Base):
     __tablename__ = "product_tags"
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     product_id = Column(Integer, nullable=False)
-    tags = Column(Integer, nullable=False)      # types.id
+    type_id = Column(Integer, nullable=False)      # types.id
 
 # --- 4. Recommendation (提案) ---
 class Recommendation(Base):
@@ -45,7 +45,6 @@ class Reaction(Base):
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     recommendation_id = Column(Integer, unique=True, nullable=False) # UQ制約
     reaction_type = Column(String, nullable=True)
-    del_flg = Column(Integer, default=0, nullable=False) # 0=リアクション中, 1=削除済
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=True)
 
@@ -60,5 +59,5 @@ class Type(Base):
     __tablename__ = "types"
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     type_group = Column(Integer, nullable=False) # 1=カラー, 2=悩み...
-    code = Column(String, nullable=False)        # SUMMER, LIP等
-    name = Column(String, nullable=False)        # ブルベ夏, 口紅等
+    type_code = Column(String, nullable=False)        # SUMMER, LIP等
+    type_name = Column(String, nullable=False)        # ブルベ夏, 口紅等
