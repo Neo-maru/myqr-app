@@ -1,6 +1,6 @@
 # テストデータの投入
 from db.session import SessionLocal
-from db.seeds import get_stores, get_types
+from db.seeds import get_stores, get_types, get_products, get_tags
 
 def run_all_seeds():
     db = SessionLocal()
@@ -9,6 +9,8 @@ def run_all_seeds():
         all_data_sources = [
             get_stores(),
             get_types(),
+            get_products(),
+            get_tags(),
         ]
 
         print("データ投入開始")

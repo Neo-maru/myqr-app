@@ -11,4 +11,10 @@ else:
   # 本番環境ではVercel Postgresを使用
   engine = create_engine(db_url)
 
+SessionLocal = sessionmaker(
+  autocommit=False,
+  autoflush=False,
+  bind=engine
+)
+
 Base = declarative_base()
