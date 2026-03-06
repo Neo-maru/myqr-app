@@ -1,7 +1,28 @@
 from fastapi import APIRouter
-from api.v1.endpoints.user import router as login_router
+
+from api.v1.endpoints.user_get import router as user_get_router
+from api.v1.endpoints.user_post import router as user_post_router
+from api.v1.endpoints.user_info import router as user_info_router
+from api.v1.endpoints.recommendation import router as recommendation_router
+from api.v1.endpoints.reaction import router as reaction_router
+from api.v1.endpoints.store import router as store_router
 
 router = APIRouter()
 
-# 以下のような形で作成してください（URLに/loginが付いていたら、endpointsのuser.pyを実行する）
-router.include_router(login_router, prefix="/login", tags=["login"])
+# ユーザー情報取得 POST /user/get
+router.include_router(user_get_router, prefix="/user/get", tags=["user_get"])
+
+# ユーザー新規登録/更新 POST /user/post
+router.include_router(user_post_router, prefix="/user/post", tags=["user_post"])
+
+# お客様情報取得 GET /user_info/{qr_id}
+router.include_router(user_info_router, prefix="/user_info", tags=["user_info"])
+
+# おすすめ商品の登録 POST /recommendation
+router.include_router(recommendation_router, prefix="/recommendation", tags=["recommendation"])
+
+# リアクション登録 POST /reaction
+router.include_router(reaction_router, prefix="/reaction", tags=["reaction"])
+
+# 店舗情報取得 GET /store
+router.include_router(store_router, prefix="/store", tags=["store"])
