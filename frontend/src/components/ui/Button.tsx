@@ -29,6 +29,7 @@ const variantStyles: Record<Variant, React.CSSProperties> = {
 export function PrimaryButton({
   children,
   style,
+  fullWidth,
   ...props
 }: Omit<ButtonProps, "variant">) {
   return (

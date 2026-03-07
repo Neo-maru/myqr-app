@@ -8,7 +8,7 @@ interface AppHeaderProps {
   staff?: boolean;
 }
 
-export function AppHeader({ title = "MyQR", backTo, right, staff }: AppHeaderProps) {
+export function AppHeader({ title = "SunQ", backTo, right, staff }: AppHeaderProps) {
   return (
     <header
       style={{

@@ -16,9 +16,9 @@ const PERSONAL_COLORS = [
 ];
 
 const SKIN_CONCERNS = [
-  { value: "乾燥肌", label: "乾燥肌" },
-  { value: "敏感肌", label: "敏感肌" },
-  { value: "テカり", label: "テカり" },
+  { value: "DRY", label: "乾燥肌" },
+  { value: "SENSITIVE", label: "敏感肌" },
+  { value: "OILY", label: "脂性肌" },
 ];
 
 const DESIRED_IMAGES = [
@@ -31,10 +31,8 @@ export function Register() {
   const navigate = useNavigate();
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone_number, setPhone_number] = useState("");
   const [personal_color, setPersonal_color] = useState<string | null>(null);
-  const [skin_concern, setSkin_concern] = useState<string[]>([]);
+  const [skin_concern, setSkin_concern] = useState<string>("");
   const [desired_image, setDesired_image] = useState<string | null>(null);
   const [memo, setMemo] = useState("");
 
@@ -42,8 +40,6 @@ export function Register() {
     e.preventDefault();
     const next: Record<string, string> = {};
     if (!name.trim()) next.name = "表示名を入力してください";
-    if (!email.trim()) next.email = "メールアドレスを入力してください";
-    if (!phone_number.trim()) next.phone_number = "電話番号を入力してください";
     if (memo.length > 100) next.memo = "メモは100文字以内で入力してください";
     setErrors(next);
     if (Object.keys(next).length > 0) return;
@@ -51,10 +47,8 @@ export function Register() {
     try {
       const res = await registerUser({
         name: name.trim(),
-        email: email.trim(),
-        phone_number: phone_number.trim(),
         personal_color: personal_color ?? undefined,
-        skin_concern: skin_concern.length ? skin_concern.join(",") : undefined,
+        skin_concern: skin_concern || undefined,
         desired_image: desired_image ?? undefined,
         memo: memo.trim() || undefined,
       });
@@ -84,30 +78,6 @@ export function Register() {
             error={errors.name}
           />
         </div>
-        <div style={{ marginBottom: "var(--spacing)" }}>
-          <label style={{ display: "block", marginBottom: 4, fontSize: "14px", color: "var(--muted)" }}>
-            メールアドレス <span style={{ color: "var(--primary)" }}>*</span>
-          </label>
-          <Input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="example@email.com"
-            error={errors.email}
-          />
-        </div>
-        <div style={{ marginBottom: "var(--spacing)" }}>
-          <label style={{ display: "block", marginBottom: 4, fontSize: "14px", color: "var(--muted)" }}>
-            電話番号 <span style={{ color: "var(--primary)" }}>*</span>
-          </label>
-          <Input
-            type="tel"
-            value={phone_number}
-            onChange={(e) => setPhone_number(e.target.value)}
-            placeholder="090-1234-5678"
-            error={errors.phone_number}
-          />
-        </div>
 
         <div style={{ marginBottom: "var(--spacing)" }}>
           <label style={{ display: "block", marginBottom: 8, fontSize: "14px", color: "var(--muted)" }}>
@@ -121,13 +91,12 @@ export function Register() {
         </div>
         <div style={{ marginBottom: "var(--spacing)" }}>
           <label style={{ display: "block", marginBottom: 8, fontSize: "14px", color: "var(--muted)" }}>
-            肌悩み（複数選択可）
+            肌悩み
           </label>
           <TagButtonGroup
             options={SKIN_CONCERNS}
             value={skin_concern}
-            multiple
-            onChange={(v) => setSkin_concern(v as string[])}
+            onChange={(v) => setSkin_concern(v as string)}
           />
         </div>
         <div style={{ marginBottom: "var(--spacing)" }}>

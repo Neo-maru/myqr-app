@@ -94,9 +94,6 @@ export function QRDisplay() {
           <Link to="/reactions">
             <SecondaryButton style={{ width: "100%" }}>おすすめを見る</SecondaryButton>
           </Link>
-          <Link to="/history">
-            <GhostButton style={{ width: "100%" }}>評価履歴</GhostButton>
-          </Link>
         </div>
       </div>
     </PageWrapper>
