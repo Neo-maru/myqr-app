@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { registerUser } from "../api/mock";
+import { registerUser } from "../api/client";
 import { PageWrapper } from "../components/layout/PageWrapper";
 import { AppHeader } from "../components/layout/AppHeader";
 import { Input, TextArea } from "../components/ui/Input";
@@ -67,7 +67,7 @@ export function Register() {
 
   return (
     <PageWrapper>
-      <AppHeader title="MyQR" />
+      <AppHeader title="SunQ" />
       <h2 style={{ fontFamily: "var(--serif-font)", marginBottom: "var(--spacing)" }}>
         ユーザー情報登録
       </h2>

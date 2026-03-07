@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getRecommendations } from "../api/mock";
+import { getRecommendations } from "../api/client";
 import { PageWrapper } from "../components/layout/PageWrapper";
 import { AppHeader } from "../components/layout/AppHeader";
 import { Card } from "../components/ui/Card";
@@ -52,7 +52,7 @@ export function History() {
 
   return (
     <PageWrapper>
-      <AppHeader title="評価履歴" backTo="/qr" />
+      <AppHeader title="SunQ" backTo="/qr" />
       <h2 style={{ fontFamily: "var(--serif-font)", marginBottom: 8 }}>評価履歴</h2>
       <div style={{ display: "flex", gap: 8, marginBottom: "var(--spacing)", flexWrap: "wrap" }}>
         {FILTERS.map((f) => (

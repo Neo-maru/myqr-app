@@ -15,6 +15,12 @@
   --card-radius: 16px;
   --spacing: 20px;
   --title-size: 28px;
+  /* ひまわり（同系・本物に近い色） */
+  --sunflower-petal: #d4a84b;
+  --sunflower-petal-light: #f0d878;
+  --sunflower-petal-dark: #b8860b;
+  --sunflower-center: #5c4033;
+  --sunflower-seed: #3d2e24;
 }
 
 * {
@@ -68,4 +74,25 @@ button {
 input, textarea {
   font-family: var(--sans-font);
   font-size: 16px;
+}
+
+/* ランディング用アニメーション */
+@keyframes landing-circle-rotate {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes landing-circle-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.15); }
+}
+
+@keyframes landing-flower-sway {
+  0%, 100% { transform: translate(-50%, -50%) rotate(-12deg) scale(1); }
+  50% { transform: translate(-50%, -50%) rotate(12deg) scale(1.06); }
+}
+
+@keyframes landing-petal-drift {
+  0%, 100% { opacity: 1; transform: rotate(0deg); }
+  50% { opacity: 0.9; transform: rotate(5deg); }
 }

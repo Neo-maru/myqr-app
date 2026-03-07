@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getUserByToken, getProducts, postRecommendation } from "../api/mock";
+import { getUserByToken, postRecommendation } from "../api/client";
 import { PageWrapper } from "../components/layout/PageWrapper";
 import { AppHeader } from "../components/layout/AppHeader";
 import { PrimaryButton } from "../components/ui/Button";
@@ -19,12 +19,12 @@ const CATEGORY_IMAGES: Record<string, string> = {
 
 type Product = {
   id: number;
-  emoji: string;
   name: string;
   brand: string;
   category: string;
   price: number;
-  image_url?: string;
+  is_recommendation?: boolean;
+  type_name?: string[];
 };
 
 export function StaffView() {
@@ -36,30 +36,54 @@ export function StaffView() {
     skin_concern?: string;
     desired_image?: string;
     memo?: string;
-    created_at?: string;
   } | null>(null);
-  const [products, setProducts] = useState<Product[]>([]);
+  const [productsByCategory, setProductsByCategory] = useState<{
+    下地: Product[];
+    リップ: Product[];
+    アイシャドウ: Product[];
+  }>({ 下地: [], リップ: [], アイシャドウ: [] });
   const [submittingId, setSubmittingId] = useState<number | null>(null);
 
   useEffect(() => {
     if (!token) return;
     getUserByToken(token)
-      .then((u) =>
-        setUser(u as { id: number; name: string; personal_color?: string; skin_concern?: string; desired_image?: string; memo?: string; created_at?: string })
-      )
+      .then((res) => {
+        setUser({
+          id: res.id,
+          name: res.name,
+          personal_color: res.personal_color ?? undefined,
+          skin_concern: res.skin_concern ?? undefined,
+          desired_image: res.desired_image ?? res.face_type ?? undefined,
+          memo: res.memo ?? undefined,
+        });
+        const toProduct = (p: { product_id: number; product_name: string; brand: string; price: number; type_name?: unknown; is_recommendation?: boolean }, category: string): Product => ({
+          id: p.product_id,
+          name: p.product_name,
+          brand: p.brand,
+          price: p.price,
+          category,
+          is_recommendation: p.is_recommendation,
+          type_name: Array.isArray(p.type_name) ? p.type_name : undefined,
+        });
+        setProductsByCategory({
+          下地: (res.base_info ?? []).map((p) => toProduct(p, "下地")),
+          リップ: (res.lip_info ?? []).map((p) => toProduct(p, "リップ")),
+          アイシャドウ: (res.shadow_info ?? []).map((p) => toProduct(p, "アイシャドウ")),
+        });
+      })
       .catch((err: unknown) => console.error(err));
-    getProducts().then((data) => setProducts(data as Product[]));
   }, [token]);
 
   const handlePropose = async (productId: number) => {
     if (!user) return;
     setSubmittingId(productId);
     try {
-      await postRecommendation({
-        user_id: user.id,
-        product_id: productId,
-        store_id: 1,
-      });
+      await postRecommendation({ user_id: user.id, product_id: productId });
+      setProductsByCategory((prev) => ({
+        下地: prev.下地.map((p) => (p.id === productId ? { ...p, is_recommendation: true } : p)),
+        リップ: prev.リップ.map((p) => (p.id === productId ? { ...p, is_recommendation: true } : p)),
+        アイシャドウ: prev.アイシャドウ.map((p) => (p.id === productId ? { ...p, is_recommendation: true } : p)),
+      }));
     } catch (err) {
       console.error(err);
     } finally {
@@ -102,12 +126,6 @@ export function StaffView() {
                   <dd style={{ margin: "0 0 12px" }}>{user.memo}</dd>
                 </>
               )}
-              {user.created_at && (
-                <>
-                  <dt style={{ fontSize: "12px", color: "var(--muted)", marginBottom: 4 }}>登録日</dt>
-                  <dd style={{ margin: 0 }}>{new Date(user.created_at).toLocaleDateString("ja-JP")}</dd>
-                </>
-              )}
             </dl>
           </Card>
 
@@ -117,8 +135,8 @@ export function StaffView() {
               商品を提案する
             </h3>
             {(["下地", "リップ", "アイシャドウ"] as const).map((category) => {
-              const categoryProducts = products.filter((p) => p.category === category);
-              if (categoryProducts.length === 0) return null;
+              const categoryProducts = productsByCategory[category];
+              if (!categoryProducts?.length) return null;
               return (
                 <div key={category} style={{ marginBottom: "var(--spacing)" }}>
                   <h4 style={{ fontSize: "14px", color: "var(--muted)", marginBottom: 8, fontWeight: 500 }}>
@@ -149,9 +167,9 @@ export function StaffView() {
                         }}
                       >
                         <div style={{ aspectRatio: "1", background: "var(--surface-alt)", position: "relative", flexShrink: 0 }}>
-                          {(CATEGORY_IMAGES[p.category] ?? p.image_url) ? (
+                          {CATEGORY_IMAGES[p.category] ? (
                             <img
-                              src={CATEGORY_IMAGES[p.category] ?? p.image_url}
+                              src={CATEGORY_IMAGES[p.category]}
                               alt=""
                               style={{
                                 width: "100%",
@@ -159,25 +177,21 @@ export function StaffView() {
                                 objectFit: "contain",
                                 display: "block",
                               }}
-                              onError={(e) => {
-                                e.currentTarget.style.display = "none";
-                                const fallback = e.currentTarget.nextElementSibling as HTMLElement;
-                                if (fallback) fallback.style.display = "flex";
-                              }}
                             />
-                          ) : null}
-                          <div
-                            style={{
-                              position: "absolute",
-                              inset: 0,
-                              display: (CATEGORY_IMAGES[p.category] ?? p.image_url) ? "none" : "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              fontSize: 48,
-                            }}
-                          >
-                            {p.emoji}
-                          </div>
+                          ) : (
+                            <div
+                              style={{
+                                position: "absolute",
+                                inset: 0,
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                fontSize: 48,
+                              }}
+                            >
+                              💄
+                            </div>
+                          )}
                         </div>
                         <div
                           style={{
@@ -195,10 +209,10 @@ export function StaffView() {
                           <PrimaryButton
                             type="button"
                             style={{ width: "100%", padding: "8px 12px", fontSize: "14px", marginTop: "auto" }}
-                            disabled={submittingId === p.id}
+                            disabled={submittingId === p.id || p.is_recommendation}
                             onClick={() => handlePropose(p.id)}
                           >
-                            {submittingId === p.id ? "送信中..." : "提案する"}
+                            {submittingId === p.id ? "送信中..." : p.is_recommendation ? "提案済み" : "提案する"}
                           </PrimaryButton>
                         </div>
                       </Card>

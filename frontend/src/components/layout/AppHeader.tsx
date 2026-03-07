@@ -42,7 +42,13 @@ export function AppHeader({ title = "MyQR", backTo, right, staff }: AppHeaderPro
             margin: 0,
           }}
         >
-          {title}
+          {title === "SunQ" ? (
+            <>
+              Sun<span style={{ color: "var(--primary)" }}>Q</span>
+            </>
+          ) : (
+            title
+          )}
         </h1>
         {staff && (
           <span

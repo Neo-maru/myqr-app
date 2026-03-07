@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getUser, updateUser } from "../api/mock";
+import { getUser, updateUser } from "../api/client";
 import { PageWrapper } from "../components/layout/PageWrapper";
 import { AppHeader } from "../components/layout/AppHeader";
 import { Input, TextArea } from "../components/ui/Input";
 import { PrimaryButton } from "../components/ui/Button";
 import { TagButtonGroup } from "../components/ui/TagButton";
-import { getStoredUserId } from "../hooks/useLocalUser";
+import { getStoredToken, getStoredUserId } from "../hooks/useLocalUser";
 
 const PERSONAL_COLORS = [
   { value: "イエベ春", label: "イエベ春" },
@@ -40,12 +40,13 @@ export function Edit() {
   const [desired_image, setDesired_image] = useState<string | null>(null);
   const [memo, setMemo] = useState("");
 
+  const token = getStoredToken();
   useEffect(() => {
-    if (!userId) {
+    if (!userId || !token) {
       navigate("/", { replace: true });
       return;
     }
-    getUser(Number(userId))
+    getUser(token)
       .then((u: Record<string, unknown>) => {
         setName((u.name as string) ?? "");
         setEmail((u.email as string) ?? "");
@@ -56,12 +57,12 @@ export function Edit() {
             ? (u.skin_concern ? (u.skin_concern as string).split(",") : [])
             : []
         );
-        setDesired_image((u.desired_image as string) ?? null);
+        setDesired_image((u.desired_image as string) ?? (u.face_type as string) ?? null);
         setMemo((u.memo as string) ?? "");
       })
       .catch(() => navigate("/", { replace: true }))
       .finally(() => setLoading(false));
-  }, [userId, navigate]);
+  }, [userId, token, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -74,6 +75,7 @@ export function Edit() {
     setErrors(next);
     if (Object.keys(next).length > 0) return;
 
+    if (!token) return;
     try {
       await updateUser(Number(userId), {
         name: name.trim(),
@@ -82,8 +84,9 @@ export function Edit() {
         personal_color: personal_color ?? undefined,
         skin_concern: skin_concern.length ? skin_concern.join(",") : undefined,
         desired_image: desired_image ?? undefined,
+        face_type: desired_image ?? undefined,
         memo: memo.trim() || undefined,
-      });
+      }, token);
       navigate("/qr", { replace: true });
     } catch (err) {
       console.error(err);
@@ -94,7 +97,7 @@ export function Edit() {
 
   return (
     <PageWrapper>
-      <AppHeader title="MyQR" backTo="/qr" />
+      <AppHeader title="SunQ" backTo="/qr" />
       <h2 style={{ fontFamily: "var(--serif-font)", marginBottom: "var(--spacing)" }}>
         ユーザー情報編集
       </h2>

@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { QRCodeCanvas } from "qrcode.react";
-import { getUser } from "../api/mock";
+import { getUser } from "../api/client";
 import { PageWrapper } from "../components/layout/PageWrapper";
 import { AppHeader } from "../components/layout/AppHeader";
 import { SecondaryButton, GhostButton } from "../components/ui/Button";
 import { getStoredToken, getStoredUserId } from "../hooks/useLocalUser";
 
-const baseUrl = import.meta.env.VITE_API_BASE_URL || "";
+const baseUrl = import.meta.env.VITE_APP_PUBLIC_URL || import.meta.env.VITE_API_BASE_URL || "";
 
 export function QRDisplay() {
   const navigate = useNavigate();
@@ -20,8 +20,17 @@ export function QRDisplay() {
       navigate("/", { replace: true });
       return;
     }
-    getUser(Number(userId))
-      .then((u) => setUser(u as { name: string; personal_color?: string; skin_concern?: string; desired_image?: string }))
+    getUser(token)
+      .then((u) => {
+        if (u && (typeof (u as { name?: unknown }).name === "string" || typeof (u as { id?: unknown }).id === "number")) {
+          setUser({
+            name: (u as { name?: string }).name ?? "",
+            personal_color: (u as { personal_color?: string }).personal_color,
+            skin_concern: (u as { skin_concern?: string }).skin_concern,
+            desired_image: (u as { desired_image?: string }).desired_image ?? (u as { face_type?: string }).face_type,
+          });
+        }
+      })
       .catch(() => navigate("/", { replace: true }));
   }, [userId, token, navigate]);
 
@@ -30,7 +39,7 @@ export function QRDisplay() {
 
   return (
     <PageWrapper>
-      <AppHeader title="MyQR" />
+      <AppHeader title="SunQ" />
       <div style={{ textAlign: "center", padding: "var(--spacing) 0" }}>
         <p style={{ marginBottom: 8, fontSize: "18px", fontWeight: 500 }}>
           {user?.name ?? "..."}
