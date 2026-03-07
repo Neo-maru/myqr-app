@@ -49,6 +49,11 @@ uvicorn main:app --reload
 
 ### 終了後はCtrl + C
 
+### venv切断
+```bash
+deactivate
+```
+
 ---
 
 # 2回目以降の起動
@@ -62,3 +67,8 @@ uvicorn main:app --reload
 ### ブラウザで http://localhost:8000/ にアクセス
 
 ### 終了後はCtrl + C
+
+### venv切断
+```bash
+deactivate
+```
