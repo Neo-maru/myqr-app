@@ -1,7 +1,5 @@
 export function registerUser(data: {
   name: string;
-  email: string;
-  phone_number: string;
   personal_color?: string;
   skin_concern?: string;
   desired_image?: string;
