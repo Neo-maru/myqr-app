@@ -5,7 +5,6 @@ import { Edit } from "./pages/Edit";
 import { QRDisplay } from "./pages/QRDisplay";
 import { Reactions } from "./pages/Reactions";
 import { StaffView } from "./pages/StaffView";
-import { StaffRecommend } from "./pages/StaffRecommend";
 import { History } from "./pages/History";
 
 const router = createBrowserRouter([
@@ -15,7 +14,6 @@ const router = createBrowserRouter([
   { path: "/qr", element: <QRDisplay /> },
   { path: "/reactions", element: <Reactions /> },
   { path: "/users/:token", element: <StaffView /> },
-  { path: "/staff/recommend", element: <StaffRecommend /> },
   { path: "/history", element: <History /> },
 ]);
 

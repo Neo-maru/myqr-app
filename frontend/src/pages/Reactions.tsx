@@ -54,7 +54,7 @@ export function Reactions() {
 
   return (
     <PageWrapper>
-      <AppHeader title="おすすめ" backTo="/qr" />
+      <AppHeader title="SunQ" backTo="/qr" />
       <h2 style={{ fontFamily: "var(--serif-font)", marginBottom: "var(--spacing)" }}>
         スタッフからのおすすめ
       </h2>

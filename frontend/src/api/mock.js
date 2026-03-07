@@ -70,30 +70,12 @@ export const getRecommendations = async (userId) => [
 export const postReaction = async (data) => ({ id: Date.now(), ...data });
 
 export const getProducts = async () => [
-  {
-    id: 1,
-    emoji: "💄",
-    name: "スキンセンサーベース EX",
-    brand: "SHISEIDO",
-    category: "化粧下地",
-    price: 2200,
-  },
-  {
-    id: 2,
-    emoji: "💋",
-    name: "ウォータリールージュ 01",
-    brand: "CEZANNE",
-    category: "リップ",
-    price: 660,
-  },
-  {
-    id: 3,
-    emoji: "✨",
-    name: "マシュマロフィニッシュパウダー",
-    brand: "CANMAKE",
-    category: "パウダー",
-    price: 880,
-  },
+  { id: 1, emoji: "💄", name: "スキンセンサーベース EX", brand: "SHISEIDO", category: "下地", price: 2200 },
+  { id: 2, emoji: "💄", name: "ポアプリベース", brand: "CANMAKE", category: "下地", price: 715 },
+  { id: 3, emoji: "💋", name: "ウォータリールージュ 01", brand: "CEZANNE", category: "リップ", price: 660 },
+  { id: 4, emoji: "💋", name: "ヴェルルッシュ ロウ", brand: "SHISEIDO", category: "リップ", price: 3300 },
+  { id: 5, emoji: "✨", name: "パウダーアイシャドウ N", brand: "CANMAKE", category: "アイシャドウ", price: 715 },
+  { id: 6, emoji: "✨", name: "ディアモンドアイズ", brand: "CEZANNE", category: "アイシャドウ", price: 880 },
 ];
 
 export const postRecommendation = async (data) => ({ id: Date.now(), ...data });
