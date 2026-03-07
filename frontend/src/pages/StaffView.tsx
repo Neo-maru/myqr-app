@@ -5,6 +5,7 @@ import { PageWrapper } from "../components/layout/PageWrapper";
 import { AppHeader } from "../components/layout/AppHeader";
 import { PrimaryButton } from "../components/ui/Button";
 import { Card } from "../components/ui/Card";
+import { toTypeLabel } from "../constants/typeMaster";
 
 // フリー素材（src/assets）は import すると Vite がパスを解決する
 import hiyakedomeImg from "../assets/hiyakedome_cream.png";
@@ -35,6 +36,7 @@ export function StaffView() {
     personal_color?: string;
     skin_concern?: string;
     desired_image?: string;
+    face_type?: string;
     memo?: string;
   } | null>(null);
   const [productsByCategory, setProductsByCategory] = useState<{
@@ -54,6 +56,7 @@ export function StaffView() {
           personal_color: res.personal_color ?? undefined,
           skin_concern: res.skin_concern ?? undefined,
           desired_image: res.desired_image ?? res.face_type ?? undefined,
+          face_type: res.face_type ?? res.desired_image ?? undefined,
           memo: res.memo ?? undefined,
         });
         const toProduct = (p: { product_id: number; product_name: string; brand: string; price: number; type_name?: unknown; is_recommendation?: boolean }, category: string): Product => ({
@@ -105,19 +108,19 @@ export function StaffView() {
               {user.personal_color && (
                 <>
                   <dt style={{ fontSize: "12px", color: "var(--muted)", marginBottom: 4 }}>パーソナルカラー</dt>
-                  <dd style={{ margin: "0 0 12px" }}>{user.personal_color}</dd>
+                  <dd style={{ margin: "0 0 12px" }}>{toTypeLabel(user.personal_color)}</dd>
                 </>
               )}
               {user.skin_concern && (
                 <>
                   <dt style={{ fontSize: "12px", color: "var(--muted)", marginBottom: 4 }}>肌悩み</dt>
-                  <dd style={{ margin: "0 0 12px" }}>{user.skin_concern}</dd>
+                  <dd style={{ margin: "0 0 12px" }}>{toTypeLabel(user.skin_concern)}</dd>
                 </>
               )}
-              {user.desired_image && (
+              {(user.desired_image ?? user.face_type) && (
                 <>
-                  <dt style={{ fontSize: "12px", color: "var(--muted)", marginBottom: 4 }}>なりたいイメージ</dt>
-                  <dd style={{ margin: "0 0 12px" }}>{user.desired_image}</dd>
+                  <dt style={{ fontSize: "12px", color: "var(--muted)", marginBottom: 4 }}>顔タイプ</dt>
+                  <dd style={{ margin: "0 0 12px" }}>{toTypeLabel(user.desired_image ?? user.face_type)}</dd>
                 </>
               )}
               {user.memo && (

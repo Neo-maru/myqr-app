@@ -174,16 +174,12 @@ export async function getUser(token: string): Promise<Record<string, unknown> & 
     memo: res.memo ?? undefined,
     face_type: res.face_type ?? undefined,
     desired_image: res.face_type ?? undefined,
-    email: undefined,
-    phone_number: undefined,
   } as Record<string, unknown> & { id: number };
 }
 
 /** ユーザー新規登録: POST /user/post（token・user_id なし） */
 export async function registerUser(data: {
   name: string;
-  email?: string;
-  phone_number?: string;
   personal_color?: string;
   skin_concern?: string;
   desired_image?: string;

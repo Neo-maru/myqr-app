@@ -5,7 +5,6 @@ import { Edit } from "./pages/Edit";
 import { QRDisplay } from "./pages/QRDisplay";
 import { Reactions } from "./pages/Reactions";
 import { StaffView } from "./pages/StaffView";
-import { History } from "./pages/History";
 
 const router = createBrowserRouter([
   { path: "/", element: <Landing /> },
@@ -14,7 +13,6 @@ const router = createBrowserRouter([
   { path: "/qr", element: <QRDisplay /> },
   { path: "/reactions", element: <Reactions /> },
   { path: "/users/:token", element: <StaffView /> },
-  { path: "/history", element: <History /> },
 ]);
 
 export default function App() {

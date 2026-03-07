@@ -7,25 +7,7 @@ import { Input, TextArea } from "../components/ui/Input";
 import { PrimaryButton } from "../components/ui/Button";
 import { TagButtonGroup } from "../components/ui/TagButton";
 import { setStoredUser } from "../hooks/useLocalUser";
-
-const PERSONAL_COLORS = [
-  { value: "イエベ春", label: "イエベ春" },
-  { value: "イエベ秋", label: "イエベ秋" },
-  { value: "ブルベ夏", label: "ブルベ夏" },
-  { value: "ブルベ冬", label: "ブルベ冬" },
-];
-
-const SKIN_CONCERNS = [
-  { value: "DRY", label: "乾燥肌" },
-  { value: "SENSITIVE", label: "敏感肌" },
-  { value: "OILY", label: "脂性肌" },
-];
-
-const DESIRED_IMAGES = [
-  { value: "かわいい", label: "かわいい" },
-  { value: "かっこいい", label: "かっこいい" },
-  { value: "大人っぽい", label: "大人っぽい" },
-];
+import { PERSONAL_COLORS, SKIN_CONCERNS, FACE_TYPES } from "../constants/typeMaster";
 
 export function Register() {
   const navigate = useNavigate();
@@ -33,7 +15,7 @@ export function Register() {
   const [name, setName] = useState("");
   const [personal_color, setPersonal_color] = useState<string | null>(null);
   const [skin_concern, setSkin_concern] = useState<string>("");
-  const [desired_image, setDesired_image] = useState<string | null>(null);
+  const [face_type, setFace_type] = useState<string>("");
   const [memo, setMemo] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -49,7 +31,7 @@ export function Register() {
         name: name.trim(),
         personal_color: personal_color ?? undefined,
         skin_concern: skin_concern || undefined,
-        desired_image: desired_image ?? undefined,
+        face_type: face_type || undefined,
         memo: memo.trim() || undefined,
       });
       setStoredUser(res.token, res.id);
@@ -84,7 +66,7 @@ export function Register() {
             パーソナルカラー
           </label>
           <TagButtonGroup
-            options={PERSONAL_COLORS}
+            options={[...PERSONAL_COLORS]}
             value={personal_color}
             onChange={(v) => setPersonal_color(v as string)}
           />
@@ -94,19 +76,19 @@ export function Register() {
             肌悩み
           </label>
           <TagButtonGroup
-            options={SKIN_CONCERNS}
+            options={[...SKIN_CONCERNS]}
             value={skin_concern}
             onChange={(v) => setSkin_concern(v as string)}
           />
         </div>
         <div style={{ marginBottom: "var(--spacing)" }}>
           <label style={{ display: "block", marginBottom: 8, fontSize: "14px", color: "var(--muted)" }}>
-            なりたいイメージ
+            顔タイプ
           </label>
           <TagButtonGroup
-            options={DESIRED_IMAGES}
-            value={desired_image}
-            onChange={(v) => setDesired_image(v as string)}
+            options={[...FACE_TYPES]}
+            value={face_type}
+            onChange={(v) => setFace_type((v as string) ?? "")}
           />
         </div>
         <div style={{ marginBottom: "var(--spacing)" }}>

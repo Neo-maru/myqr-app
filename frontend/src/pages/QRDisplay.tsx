@@ -4,8 +4,9 @@ import { QRCodeCanvas } from "qrcode.react";
 import { getUser } from "../api/client";
 import { PageWrapper } from "../components/layout/PageWrapper";
 import { AppHeader } from "../components/layout/AppHeader";
-import { SecondaryButton, GhostButton } from "../components/ui/Button";
+import { SecondaryButton } from "../components/ui/Button";
 import { getStoredToken, getStoredUserId } from "../hooks/useLocalUser";
+import { toTypeLabel } from "../constants/typeMaster";
 
 const baseUrl = import.meta.env.VITE_APP_PUBLIC_URL || import.meta.env.VITE_API_BASE_URL || "";
 
@@ -13,7 +14,7 @@ export function QRDisplay() {
   const navigate = useNavigate();
   const token = getStoredToken();
   const userId = getStoredUserId();
-  const [user, setUser] = useState<{ name: string; personal_color?: string; skin_concern?: string; desired_image?: string } | null>(null);
+  const [user, setUser] = useState<{ name: string; personal_color?: string; skin_concern?: string; desired_image?: string; face_type?: string } | null>(null);
 
   useEffect(() => {
     if (!token || !userId) {
@@ -66,7 +67,7 @@ export function QRDisplay() {
                 color: "var(--primary-dark)",
               }}
             >
-              {user.personal_color}
+              {toTypeLabel(user.personal_color)}
             </span>
           )}
           {user?.skin_concern && (
@@ -79,10 +80,10 @@ export function QRDisplay() {
                 color: "var(--muted)",
               }}
             >
-              {user.skin_concern}
+              {toTypeLabel(user.skin_concern)}
             </span>
           )}
-          {user?.desired_image && (
+          {(user?.desired_image ?? user?.face_type) && (
             <span
               style={{
                 padding: "6px 12px",
@@ -92,7 +93,7 @@ export function QRDisplay() {
                 color: "var(--muted)",
               }}
             >
-              {user.desired_image}
+              {toTypeLabel(user.desired_image ?? user.face_type)}
             </span>
           )}
         </div>
