@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, DateTime, UniqueConstraint
+from sqlalchemy import Column, Integer, String, Text, JSON, DateTime, UniqueConstraint
 from sqlalchemy.sql import func
 from db.session import Base
 
@@ -25,6 +25,7 @@ class Product(Base):
     brand = Column(Integer, nullable=True)      # types.id
     store_recommend = Column(Integer, default=0, nullable=False)
     price = Column(Integer, nullable=False)
+    product_tags = Column(JSON, nullable=True)
 
 # --- 3. ProductTag (商品タグ) ---
 class ProductTag(Base):
