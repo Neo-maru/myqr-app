@@ -1,15 +1,21 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from api.v1.api import router as api_router
+from core.config import settings
 
 app = FastAPI()
+
+ORIGINS = [
+    settings.FRONTEND_BASE_URL,
+]
+
+# CORSを設定
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-@app.get("/")
-def read_root():
-    return {"message": "Hello, World!"}
+app.include_router(api_router, prefix="/api/v1")
