@@ -89,7 +89,7 @@ class StoreGetResponse(BaseModel):
     store_name: str
 
 
-# --- 7. お客様情報取得 (GET /user_info/{qr_id}) ---
+# --- 7. お客様情報取得 (GET /user_info/get/{qr_id}) ---
 class UserInfoResponse(BaseModel):
     user_id: int
     name: str
@@ -100,3 +100,11 @@ class UserInfoResponse(BaseModel):
     base_info: List[ProductInfo]
     shadow_info: List[ProductInfo]
     lip_info: List[ProductInfo]
+
+# --- 8. 店舗情報取得 (GET /store/get) ---
+class StoreGetRequest(BaseModel):
+    id: int
+
+class StoreGetResponse(BaseModel):
+    id: int
+    name: str
