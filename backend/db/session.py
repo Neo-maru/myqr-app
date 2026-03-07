@@ -21,11 +21,8 @@ Base = declarative_base()
 
 
 def get_db():
-    """
-    データベースセッションを取得する依存性関数
-    """
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+  db = SessionLocal()
+  try:
+    yield db
+  finally:
+    db.close()

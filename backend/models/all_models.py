@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, DateTime
+from sqlalchemy import Column, Integer, String, Text, DateTime, UniqueConstraint
 from sqlalchemy.sql import func
 from db.session import Base
 
@@ -7,6 +7,7 @@ class User(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     token = Column(String, unique=True, index=True, nullable=False)
+    qr_id = Column(String, unique=True, index=True, nullable=False)
     name = Column(String, nullable=False)
     personal_color = Column(Integer, nullable=True)
     face_type = Column(Integer, nullable=True)
@@ -39,24 +40,20 @@ class Recommendation(Base):
     user_id = Column(Integer, nullable=False)
     product_id = Column(Integer, nullable=False)
     store_id = Column(Integer, nullable=False)
-    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
-
-# --- 5. Reaction (リアクション) ---
-class Reaction(Base):
-    __tablename__ = "reactions"
-    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    recommendation_id = Column(Integer, unique=True, nullable=False) # UQ制約
-    reaction_type = Column(String, nullable=True)
+    reaction = Column(String, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=True)
+    __table_args__ = (
+        UniqueConstraint("user_id", "product_id", name="uq_user_product_recommendation"),
+    )
 
-# --- 6. Store (店舗マスタ) ---
+# --- 5. Store (店舗マスタ) ---
 class Store(Base):
     __tablename__ = "stores"
     id = Column(Integer, primary_key=True, index=True)
     store_name = Column(String, nullable=False)
 
-# --- 7. Type (タイプマスタ) ---
+# --- 6. Type (タイプマスタ) ---
 class Type(Base):
     __tablename__ = "types"
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)

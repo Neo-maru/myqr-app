@@ -1,5 +1,5 @@
 from db.session import engine, Base
-from models.all_models import User, Product, ProductTag, Recommendation, Reaction, Store, Type
+from models.all_models import User, Product, ProductTag, Recommendation, Store, Type
 
 def init_db():
     print("myqr.dbのテーブルを作成します")
