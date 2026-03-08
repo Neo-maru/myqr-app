@@ -77,6 +77,7 @@ class RecommendationPostResponse(BaseModel):
 class ReactionPostRequest(BaseModel):
     user_id: int
     product_id: int
+    store_id: int
     reaction: Optional[str] = None
 
 
