@@ -1,13 +1,19 @@
 import { useCallback, useEffect, useState } from "react";
 import { getPresetById, getDefaultPreset } from "../constants/themeColors";
-import { applyThemeById, getStoredThemeId, setStoredThemeId } from "../utils/theme";
+import {
+  applyThemeById,
+  getStoredThemeId,
+  setStoredThemeId,
+} from "../utils/theme";
 
 export function useThemeColor(): {
   themeId: string;
   themeName: string;
   setThemeId: (id: string) => void;
 } {
-  const [themeId, setState] = useState<string>(() => getStoredThemeId() ?? getDefaultPreset().id);
+  const [themeId, setState] = useState<string>(
+    () => getStoredThemeId() ?? getDefaultPreset().id,
+  );
 
   const preset = getPresetById(themeId) ?? getDefaultPreset();
 

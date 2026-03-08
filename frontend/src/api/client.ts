@@ -15,10 +15,12 @@ const getBaseUrl = (): string => {
 async function request<T>(
   method: string,
   path: string,
-  body?: Record<string, unknown>
+  body?: Record<string, unknown>,
 ): Promise<T> {
   const base = getBaseUrl();
-  const url = path.startsWith("http") ? path : `${base}${path.startsWith("/") ? path : `/${path}`}`;
+  const url = path.startsWith("http")
+    ? path
+    : `${base}${path.startsWith("/") ? path : `/${path}`}`;
   const options: RequestInit = {
     method,
     headers: {
@@ -117,19 +119,37 @@ const CATEGORY_MAP = {
 /** おすすめ取得レスポンスをフロント用の平坦リストに変換 */
 function flattenRecommendations(res: RecommendationGetResponse): Array<{
   id: number;
-  product: { id: number; name: string; brand: string; category: string; price: number; tags?: string[] };
+  product: {
+    id: number;
+    name: string;
+    brand: string;
+    category: string;
+    price: number;
+    tags?: string[];
+  };
   reaction: string | null;
   store_name: string;
   created_at: string;
 }> {
   const out: Array<{
     id: number;
-    product: { id: number; name: string; brand: string; category: string; price: number; tags?: string[] };
+    product: {
+      id: number;
+      name: string;
+      brand: string;
+      category: string;
+      price: number;
+      tags?: string[];
+    };
     reaction: string | null;
     store_name: string;
     created_at: string;
   }> = [];
-  const entries: (keyof typeof CATEGORY_MAP)[] = ["base_info", "shadow_info", "lip_info"];
+  const entries: (keyof typeof CATEGORY_MAP)[] = [
+    "base_info",
+    "shadow_info",
+    "lip_info",
+  ];
   for (const key of entries) {
     const list = res[key];
     const category = CATEGORY_MAP[key];
@@ -163,8 +183,12 @@ function flattenRecommendations(res: RecommendationGetResponse): Array<{
 // --- ユーザー ---
 
 /** ユーザー情報取得: POST /user/user/get（バックエンドの prefix + path に合わせる） */
-export async function getUser(token: string): Promise<Record<string, unknown> & { id: number }> {
-  const res = await request<UserGetResponse>("POST", "/user/user/get", { token });
+export async function getUser(
+  token: string,
+): Promise<Record<string, unknown> & { id: number }> {
+  const res = await request<UserGetResponse>("POST", "/user/user/get", {
+    token,
+  });
   return {
     id: res.user_id,
     user_id: res.user_id,
@@ -206,7 +230,7 @@ export async function registerUser(data: {
 export async function updateUser(
   id: number,
   data: Record<string, unknown>,
-  token: string
+  token: string,
 ): Promise<Record<string, unknown>> {
   const body: Record<string, unknown> = {
     ...data,
@@ -218,9 +242,7 @@ export async function updateUser(
 }
 
 /** お客様情報取得: GET /user_info/user_info/get/{qr_id}（バックエンドの prefix + path に合わせる） */
-export async function getUserByToken(
-  token: string
-): Promise<{
+export async function getUserByToken(token: string): Promise<{
   id: number;
   name: string;
   personal_color?: string | null;
@@ -251,18 +273,29 @@ export async function getUserByToken(
 // --- おすすめ・リアクション ---
 
 /** おすすめ商品取得: POST /recommendation/get → フロント用に平坦化して返す */
-export async function getRecommendations(
-  userId: number
-): Promise<Array<{
-  id: number;
-  product: { id: number; name: string; brand: string; category: string; price: number; tags?: string[] };
-  reaction: string | null;
-  store_name: string;
-  created_at: string;
-}>> {
-  const res = await request<RecommendationGetResponse>("POST", "/recommendation/recommendation/get", {
-    user_id: userId,
-  });
+export async function getRecommendations(userId: number): Promise<
+  Array<{
+    id: number;
+    product: {
+      id: number;
+      name: string;
+      brand: string;
+      category: string;
+      price: number;
+      tags?: string[];
+    };
+    reaction: string | null;
+    store_name: string;
+    created_at: string;
+  }>
+> {
+  const res = await request<RecommendationGetResponse>(
+    "POST",
+    "/recommendation/recommendation/get",
+    {
+      user_id: userId,
+    },
+  );
   return flattenRecommendations(res);
 }
 
@@ -271,7 +304,11 @@ export async function postRecommendation(data: {
   user_id: number;
   product_id: number;
 }): Promise<void> {
-  await request("POST", "/recommendation/recommendation/post", data as Record<string, unknown>);
+  await request(
+    "POST",
+    "/recommendation/recommendation/post",
+    data as Record<string, unknown>,
+  );
 }
 
 /** リアクション登録: POST /reaction/reaction/post */
@@ -280,13 +317,19 @@ export async function postReaction(data: {
   product_id: number;
   reaction: string | null;
 }): Promise<void> {
-  await request("POST", "/reaction/reaction/post", data as Record<string, unknown>);
+  await request(
+    "POST",
+    "/reaction/reaction/post",
+    data as Record<string, unknown>,
+  );
 }
 
 // --- 店舗 ---
 
 /** 店舗情報取得: POST /store/store/get（バックエンドは単体 { id, name } を返す → 配列1件に変換） */
-export async function getStores(): Promise<Array<{ id: number; store_name: string }>> {
+export async function getStores(): Promise<
+  Array<{ id: number; store_name: string }>
+> {
   const res = await request<StoreGetResponse>("POST", "/store/store/get");
   if (!res || typeof res.id === "undefined") return [];
   return [{ id: res.id, store_name: res.name }];

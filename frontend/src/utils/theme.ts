@@ -2,13 +2,24 @@
  * 16進カラーを [r, g, b] に変換（0-255）
  */
 function hexToRgb(hex: string): [number, number, number] | null {
-  const m = hex.replace(/^#/, "").match(/^([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i);
+  const m = hex
+    .replace(/^#/, "")
+    .match(/^([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i);
   if (!m) return null;
   return [parseInt(m[1], 16), parseInt(m[2], 16), parseInt(m[3], 16)];
 }
 
 function rgbToHex(r: number, g: number, b: number): string {
-  return "#" + [r, g, b].map((x) => Math.round(Math.max(0, Math.min(255, x))).toString(16).padStart(2, "0")).join("");
+  return (
+    "#" +
+    [r, g, b]
+      .map((x) =>
+        Math.round(Math.max(0, Math.min(255, x)))
+          .toString(16)
+          .padStart(2, "0"),
+      )
+      .join("")
+  );
 }
 
 /**
@@ -17,7 +28,7 @@ function rgbToHex(r: number, g: number, b: number): string {
 function mixRgb(
   c1: [number, number, number],
   c2: [number, number, number],
-  amount: number
+  amount: number,
 ): [number, number, number] {
   return [
     c1[0] + (c2[0] - c1[0]) * amount,
@@ -29,7 +40,10 @@ function mixRgb(
 /**
  * メインカラーから primary-light / primary-dark を算出
  */
-export function primaryLightDark(hex: string): { primaryLight: string; primaryDark: string } {
+export function primaryLightDark(hex: string): {
+  primaryLight: string;
+  primaryDark: string;
+} {
   const rgb = hexToRgb(hex);
   const white: [number, number, number] = [255, 255, 255];
   const black: [number, number, number] = [0, 0, 0];
@@ -42,7 +56,11 @@ export function primaryLightDark(hex: string): { primaryLight: string; primaryDa
   };
 }
 
-import { THEME_PRESETS, getPresetById, getDefaultPreset } from "../constants/themeColors";
+import {
+  THEME_PRESETS,
+  getPresetById,
+  getDefaultPreset,
+} from "../constants/themeColors";
 
 const THEME_STORAGE_KEY = "theme_primary";
 
@@ -52,7 +70,9 @@ export function getStoredThemeId(): string | null {
     const v = localStorage.getItem(THEME_STORAGE_KEY);
     if (!v) return null;
     if (/^#[0-9a-fA-F]{6}$/.test(v)) {
-      const found = THEME_PRESETS.find((p) => p.primary.toLowerCase() === v.toLowerCase());
+      const found = THEME_PRESETS.find(
+        (p) => p.primary.toLowerCase() === v.toLowerCase(),
+      );
       return found ? found.id : null;
     }
     return v;

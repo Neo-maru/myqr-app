@@ -9,7 +9,11 @@ import { TagButtonGroup } from "../components/ui/TagButton";
 import { ThemeColorPicker } from "../components/ui/ThemeColorPicker";
 import { setStoredUser } from "../hooks/useLocalUser";
 import { useThemeColor } from "../hooks/useThemeColor";
-import { PERSONAL_COLORS, SKIN_CONCERNS, FACE_TYPES } from "../constants/typeMaster";
+import {
+  PERSONAL_COLORS,
+  SKIN_CONCERNS,
+  FACE_TYPES,
+} from "../constants/typeMaster";
 
 export function Register() {
   const navigate = useNavigate();
@@ -50,7 +54,14 @@ export function Register() {
 
       <form onSubmit={handleSubmit}>
         <div style={{ marginBottom: "var(--spacing)" }}>
-          <label style={{ display: "block", marginBottom: 4, fontSize: "14px", color: "var(--muted)" }}>
+          <label
+            style={{
+              display: "block",
+              marginBottom: 4,
+              fontSize: "14px",
+              color: "var(--muted)",
+            }}
+          >
             表示名 <span style={{ color: "var(--primary)" }}> *必須</span>
           </label>
           <Input
@@ -62,7 +73,14 @@ export function Register() {
         </div>
 
         <div style={{ marginBottom: "var(--spacing)" }}>
-          <label style={{ display: "block", marginBottom: 8, fontSize: "14px", color: "var(--muted)" }}>
+          <label
+            style={{
+              display: "block",
+              marginBottom: 8,
+              fontSize: "14px",
+              color: "var(--muted)",
+            }}
+          >
             パーソナルカラー
           </label>
           <TagButtonGroup
@@ -72,7 +90,14 @@ export function Register() {
           />
         </div>
         <div style={{ marginBottom: "var(--spacing)" }}>
-          <label style={{ display: "block", marginBottom: 8, fontSize: "14px", color: "var(--muted)" }}>
+          <label
+            style={{
+              display: "block",
+              marginBottom: 8,
+              fontSize: "14px",
+              color: "var(--muted)",
+            }}
+          >
             肌悩み
           </label>
           <TagButtonGroup
@@ -82,7 +107,14 @@ export function Register() {
           />
         </div>
         <div style={{ marginBottom: "var(--spacing)" }}>
-          <label style={{ display: "block", marginBottom: 8, fontSize: "14px", color: "var(--muted)" }}>
+          <label
+            style={{
+              display: "block",
+              marginBottom: 8,
+              fontSize: "14px",
+              color: "var(--muted)",
+            }}
+          >
             顔タイプ
           </label>
           <TagButtonGroup
@@ -92,7 +124,14 @@ export function Register() {
           />
         </div>
         <div style={{ marginBottom: "var(--spacing)" }}>
-          <label style={{ display: "block", marginBottom: 4, fontSize: "14px", color: "var(--muted)" }}>
+          <label
+            style={{
+              display: "block",
+              marginBottom: 4,
+              fontSize: "14px",
+              color: "var(--muted)",
+            }}
+          >
             メモ（100文字以内）
           </label>
           <TextArea
@@ -102,20 +141,42 @@ export function Register() {
             maxLength={100}
             error={errors.memo}
           />
-          <p style={{ fontSize: "12px", color: "var(--muted)", marginTop: 4 }}>{memo.length}/100</p>
+          <p style={{ fontSize: "12px", color: "var(--muted)", marginTop: 4 }}>
+            {memo.length}/100
+          </p>
         </div>
 
         <div style={{ marginBottom: "var(--spacing)" }}>
-          <label style={{ display: "block", marginBottom: 8, fontSize: "14px", color: "var(--muted)" }}>
+          <label
+            style={{
+              display: "block",
+              marginBottom: 8,
+              fontSize: "14px",
+              color: "var(--muted)",
+            }}
+          >
             テーマカラー
           </label>
-          <ThemeColorPicker value={themeId} onChange={setThemeId} themeName={themeName} />
+          <ThemeColorPicker
+            value={themeId}
+            onChange={setThemeId}
+            themeName={themeName}
+          />
         </div>
 
-  
-          <p style={{ color: "var(--primary-dark)", fontSize: "14px", marginBottom: 8 }}/>
+        <p
+          style={{
+            color: "var(--primary-dark)",
+            fontSize: "14px",
+            marginBottom: 8,
+          }}
+        />
 
-        <PrimaryButton type="submit" fullWidth style={{ width: "100%", marginTop: 8 }}>
+        <PrimaryButton
+          type="submit"
+          fullWidth
+          style={{ width: "100%", marginTop: 8 }}
+        >
           登録する
         </PrimaryButton>
       </form>

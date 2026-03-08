@@ -10,7 +10,10 @@ import { useThemeColor } from "../hooks/useThemeColor";
 import { getPresetById } from "../constants/themeColors";
 import { toTypeLabel } from "../constants/typeMaster";
 
-const baseUrl = import.meta.env.VITE_APP_PUBLIC_URL || import.meta.env.VITE_API_BASE_URL || "";
+const baseUrl =
+  import.meta.env.VITE_APP_PUBLIC_URL ||
+  import.meta.env.VITE_API_BASE_URL ||
+  "";
 const QR_SIZE = 220;
 const LOGO_SIZE = 72;
 
@@ -21,7 +24,13 @@ export function QRDisplay() {
   const qrFgColor = preset?.primary ?? "#c4846a";
   const token = getStoredToken();
   const userId = getStoredUserId();
-  const [user, setUser] = useState<{ name: string; personal_color?: string; skin_concern?: string; desired_image?: string; face_type?: string } | null>(null);
+  const [user, setUser] = useState<{
+    name: string;
+    personal_color?: string;
+    skin_concern?: string;
+    desired_image?: string;
+    face_type?: string;
+  } | null>(null);
 
   useEffect(() => {
     if (!token || !userId) {
@@ -30,12 +39,18 @@ export function QRDisplay() {
     }
     getUser(token)
       .then((u) => {
-        if (u && (typeof (u as { name?: unknown }).name === "string" || typeof (u as { id?: unknown }).id === "number")) {
+        if (
+          u &&
+          (typeof (u as { name?: unknown }).name === "string" ||
+            typeof (u as { id?: unknown }).id === "number")
+        ) {
           setUser({
             name: (u as { name?: string }).name ?? "",
             personal_color: (u as { personal_color?: string }).personal_color,
             skin_concern: (u as { skin_concern?: string }).skin_concern,
-            desired_image: (u as { desired_image?: string }).desired_image ?? (u as { face_type?: string }).face_type,
+            desired_image:
+              (u as { desired_image?: string }).desired_image ??
+              (u as { face_type?: string }).face_type,
           });
         }
       })
@@ -96,7 +111,15 @@ export function QRDisplay() {
             </div>
           </div>
         </div>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", marginBottom: "var(--spacing)" }}>
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: 8,
+            justifyContent: "center",
+            marginBottom: "var(--spacing)",
+          }}
+        >
           {user?.personal_color && (
             <span
               style={{
@@ -139,14 +162,18 @@ export function QRDisplay() {
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           <Link to="/edit">
-            <PrimaryButton style={{ width: "100%" }}>情報を編集する</PrimaryButton>
+            <PrimaryButton style={{ width: "100%" }}>
+              情報を編集する
+            </PrimaryButton>
           </Link>
           <Link to="/reactions">
-            <PrimaryButton style={{ width: "100%" }}>スタッフからのおすすめ商品を見る</PrimaryButton>
+            <PrimaryButton style={{ width: "100%" }}>
+              スタッフからのおすすめ商品を見る
+            </PrimaryButton>
           </Link>
         </div>
-                {/* コピーライト */}
-                <p
+        {/* コピーライト */}
+        <p
           style={{
             fontSize: "10px",
             color: "var(--muted)",

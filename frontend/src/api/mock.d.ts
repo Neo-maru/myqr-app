@@ -30,12 +30,26 @@ export function getUserByToken(token: string): Promise<{
   lip_info?: UserInfoProduct[];
 }>;
 
-export function updateUser(id: number, data: Record<string, unknown>, token: string): Promise<Record<string, unknown>>;
+export function updateUser(
+  id: number,
+  data: Record<string, unknown>,
+  token: string,
+): Promise<Record<string, unknown>>;
 
-export function getRecommendations(userId: number): Promise<Array<Record<string, unknown>>>;
+export function getRecommendations(
+  userId: number,
+): Promise<Array<Record<string, unknown>>>;
 
-export function postReaction(data: { user_id: number; product_id: number; reaction: string | null }): Promise<Record<string, unknown>>;
+export function postReaction(data: {
+  user_id: number;
+  product_id: number;
+  reaction: string | null;
+}): Promise<Record<string, unknown>>;
 
-export function postRecommendation(data: { user_id: number; product_id: number; store_id?: number }): Promise<Record<string, unknown>>;
+export function postRecommendation(data: {
+  user_id: number;
+  product_id: number;
+  store_id?: number;
+}): Promise<Record<string, unknown>>;
 
 export function getStores(): Promise<Array<{ id: number; store_name: string }>>;

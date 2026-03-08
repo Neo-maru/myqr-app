@@ -40,7 +40,8 @@ export function Landing() {
               marginLeft: -100,
               marginTop: -100,
               borderRadius: "50%",
-              background: "radial-gradient(circle, var(--primary-light) 0%, transparent 70%)",
+              background:
+                "radial-gradient(circle, var(--primary-light) 0%, transparent 70%)",
               opacity: 0.9,
               animation: "landing-circle-pulse 3s ease-in-out infinite",
             }}
@@ -93,14 +94,46 @@ export function Landing() {
               style={{ width: "100%", height: "100%", overflow: "visible" }}
             >
               <defs>
-                <linearGradient id="petal-outer" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="var(--sunflower-petal-light)" stopOpacity="1" />
-                  <stop offset="50%" stopColor="var(--sunflower-petal)" stopOpacity="1" />
-                  <stop offset="100%" stopColor="var(--sunflower-petal-dark)" stopOpacity="0.95" />
+                <linearGradient
+                  id="petal-outer"
+                  x1="0%"
+                  y1="0%"
+                  x2="100%"
+                  y2="100%"
+                >
+                  <stop
+                    offset="0%"
+                    stopColor="var(--sunflower-petal-light)"
+                    stopOpacity="1"
+                  />
+                  <stop
+                    offset="50%"
+                    stopColor="var(--sunflower-petal)"
+                    stopOpacity="1"
+                  />
+                  <stop
+                    offset="100%"
+                    stopColor="var(--sunflower-petal-dark)"
+                    stopOpacity="0.95"
+                  />
                 </linearGradient>
-                <linearGradient id="petal-inner" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="var(--sunflower-petal-light)" stopOpacity="1" />
-                  <stop offset="100%" stopColor="var(--sunflower-petal)" stopOpacity="0.9" />
+                <linearGradient
+                  id="petal-inner"
+                  x1="0%"
+                  y1="0%"
+                  x2="100%"
+                  y2="100%"
+                >
+                  <stop
+                    offset="0%"
+                    stopColor="var(--sunflower-petal-light)"
+                    stopOpacity="1"
+                  />
+                  <stop
+                    offset="100%"
+                    stopColor="var(--sunflower-petal)"
+                    stopOpacity="0.9"
+                  />
                 </linearGradient>
               </defs>
               {[...Array(20)].map((_, i) => {
@@ -133,9 +166,27 @@ export function Landing() {
               })}
               {/* 中心：QRファインダーパターン（3重の四角） */}
               <g transform="translate(32, 32)">
-                <rect x="-7" y="-7" width="14" height="14" fill="var(--sunflower-center)" />
-                <rect x="-5" y="-5" width="10" height="10" fill="var(--surface)" />
-                <rect x="-3" y="-3" width="6" height="6" fill="var(--sunflower-center)" />
+                <rect
+                  x="-7"
+                  y="-7"
+                  width="14"
+                  height="14"
+                  fill="var(--sunflower-center)"
+                />
+                <rect
+                  x="-5"
+                  y="-5"
+                  width="10"
+                  height="10"
+                  fill="var(--surface)"
+                />
+                <rect
+                  x="-3"
+                  y="-3"
+                  width="6"
+                  height="6"
+                  fill="var(--sunflower-center)"
+                />
               </g>
             </svg>
           </div>
@@ -196,7 +247,9 @@ export function Landing() {
             textAlign: "center",
           }}
         >
-          パーソナル情報を一度登録するだけ。<br/>QRを見せるだけで、コスメ体験がはじまります。
+          パーソナル情報を一度登録するだけ。
+          <br />
+          QRを見せるだけで、コスメ体験がはじまります。
         </p>
 
         {/* 5. CTA */}

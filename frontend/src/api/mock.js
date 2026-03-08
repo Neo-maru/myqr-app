@@ -20,10 +20,38 @@ export const getUser = async (token) => ({
 });
 
 const mockProductsByCategory = [
-  { product_id: 1, product_name: "スキンセンサーベース EX", brand: "SHISEIDO", price: 2200, type_name: ["乾燥肌向け"], is_recommendation: false },
-  { product_id: 2, product_name: "ポアプリベース", brand: "CANMAKE", price: 715, type_name: [], is_recommendation: false },
-  { product_id: 3, product_name: "ウォータリールージュ 01", brand: "CEZANNE", price: 660, type_name: ["透け感"], is_recommendation: false },
-  { product_id: 4, product_name: "パウダーアイシャドウ N", brand: "CANMAKE", price: 715, type_name: ["ナチュラル"], is_recommendation: false },
+  {
+    product_id: 1,
+    product_name: "スキンセンサーベース EX",
+    brand: "SHISEIDO",
+    price: 2200,
+    type_name: ["乾燥肌向け"],
+    is_recommendation: false,
+  },
+  {
+    product_id: 2,
+    product_name: "ポアプリベース",
+    brand: "CANMAKE",
+    price: 715,
+    type_name: [],
+    is_recommendation: false,
+  },
+  {
+    product_id: 3,
+    product_name: "ウォータリールージュ 01",
+    brand: "CEZANNE",
+    price: 660,
+    type_name: ["透け感"],
+    is_recommendation: false,
+  },
+  {
+    product_id: 4,
+    product_name: "パウダーアイシャドウ N",
+    brand: "CANMAKE",
+    price: 715,
+    type_name: ["ナチュラル"],
+    is_recommendation: false,
+  },
 ];
 
 /** StaffView 用: base_info / shadow_info / lip_info を返す */
@@ -48,21 +76,42 @@ export const updateUser = async (id, data, token) => ({ id, ...data });
 export const getRecommendations = async (userId) => [
   {
     id: 1,
-    product: { id: 1, name: "スキンセンサーベース EX", brand: "SHISEIDO", category: "下地", price: 2200, tags: ["乾燥肌向け", "セミマット"] },
+    product: {
+      id: 1,
+      name: "スキンセンサーベース EX",
+      brand: "SHISEIDO",
+      category: "下地",
+      price: 2200,
+      tags: ["乾燥肌向け", "セミマット"],
+    },
     reaction: null,
     store_name: "ルミネ新宿店",
     created_at: "2026-03-01T14:00:00",
   },
   {
     id: 2,
-    product: { id: 2, name: "ウォータリールージュ 01", brand: "CEZANNE", category: "リップ", price: 660, tags: ["透け感", "大人っぽい"] },
+    product: {
+      id: 2,
+      name: "ウォータリールージュ 01",
+      brand: "CEZANNE",
+      category: "リップ",
+      price: 660,
+      tags: ["透け感", "大人っぽい"],
+    },
     reaction: null,
     store_name: "ルミネ新宿店",
     created_at: "2026-03-01T14:00:00",
   },
   {
     id: 5,
-    product: { id: 5, name: "パウダーアイシャドウ N", brand: "CANMAKE", category: "アイシャドウ", price: 715, tags: ["ナチュラル"] },
+    product: {
+      id: 5,
+      name: "パウダーアイシャドウ N",
+      brand: "CANMAKE",
+      category: "アイシャドウ",
+      price: 715,
+      tags: ["ナチュラル"],
+    },
     reaction: null,
     store_name: "ルミネ新宿店",
     created_at: "2026-03-01T14:00:00",

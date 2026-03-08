@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { getRecommendations, postReaction } from "../api/client";
 import { PageWrapper } from "../components/layout/PageWrapper";
 import { AppHeader } from "../components/layout/AppHeader";
@@ -45,7 +44,9 @@ export function Reactions() {
 
   useEffect(() => {
     if (!userId) return;
-    getRecommendations(Number(userId)).then((data) => setItems(data as Recommendation[]));
+    getRecommendations(Number(userId)).then((data) =>
+      setItems(data as Recommendation[]),
+    );
   }, [userId]);
 
   const handleReaction = async (productId: number, reactionType: string) => {
@@ -60,8 +61,8 @@ export function Reactions() {
       });
       setItems((prev) =>
         prev.map((r) =>
-          r.product.id === productId ? { ...r, reaction: nextType } : r
-        )
+          r.product.id === productId ? { ...r, reaction: nextType } : r,
+        ),
       );
     } catch (err) {
       console.error(err);
@@ -75,9 +76,17 @@ export function Reactions() {
 
   return (
     <PageWrapper>
-      <AppHeader title="SunQ" pageName="スタッフからのおすすめ商品" backTo="/qr" />
+      <AppHeader
+        title="SunQ"
+        pageName="スタッフからのおすすめ商品"
+        backTo="/qr"
+      />
       {items.length === 0 ? (
-        <p style={{ color: "var(--muted)" }}>まだおすすめはありません。<br />スタッフが商品を提案するとここに表示されます。</p>
+        <p style={{ color: "var(--muted)" }}>
+          まだおすすめはありません。
+          <br />
+          スタッフが商品を提案するとここに表示されます。
+        </p>
       ) : (
         <>
           {byCategory.map(
@@ -138,7 +147,8 @@ export function Reactions() {
                               }}
                               onError={(e) => {
                                 e.currentTarget.style.display = "none";
-                                const fallback = e.currentTarget.nextElementSibling as HTMLElement;
+                                const fallback = e.currentTarget
+                                  .nextElementSibling as HTMLElement;
                                 if (fallback) fallback.style.display = "flex";
                               }}
                             />
@@ -149,7 +159,9 @@ export function Reactions() {
                               inset: 0,
                               width: "100%",
                               height: "100%",
-                              display: CATEGORY_IMAGES[rec.product.category] ? "none" : "flex",
+                              display: CATEGORY_IMAGES[rec.product.category]
+                                ? "none"
+                                : "flex",
                               alignItems: "center",
                               justifyContent: "center",
                               fontSize: 48,
@@ -228,12 +240,11 @@ export function Reactions() {
                     ))}
                   </div>
                 </div>
-              )
+              ),
           )}
         </>
       )}
-      <p style={{ marginTop: "var(--spacing)" }}>
-      </p>
+      <p style={{ marginTop: "var(--spacing)" }}></p>
     </PageWrapper>
   );
 }

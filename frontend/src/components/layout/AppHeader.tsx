@@ -9,7 +9,13 @@ interface AppHeaderProps {
   staff?: boolean;
 }
 
-export function AppHeader({ title = "SunQ", pageName, backTo, right, staff }: AppHeaderProps) {
+export function AppHeader({
+  title = "SunQ",
+  pageName,
+  backTo,
+  right,
+  staff,
+}: AppHeaderProps) {
   return (
     <header
       style={{
@@ -59,8 +65,24 @@ export function AppHeader({ title = "SunQ", pageName, backTo, right, staff }: Ap
           )}
           {pageName && (
             <>
-              <span style={{ fontSize: "16px", fontWeight: 400, color: "var(--muted)" }}>｜</span>
-              <span style={{ fontSize: "16px", fontFamily: "var(--sans-font)", color: "var(--text)" }}>{pageName}</span>
+              <span
+                style={{
+                  fontSize: "16px",
+                  fontWeight: 400,
+                  color: "var(--muted)",
+                }}
+              >
+                ｜
+              </span>
+              <span
+                style={{
+                  fontSize: "16px",
+                  fontFamily: "var(--sans-font)",
+                  color: "var(--text)",
+                }}
+              >
+                {pageName}
+              </span>
             </>
           )}
         </h1>

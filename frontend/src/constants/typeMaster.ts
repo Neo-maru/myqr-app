@@ -91,7 +91,7 @@ export const TYPE_CODE_TO_LABEL: Record<string, string> = {
 
 /** type_name（表示ラベル）→ type_code の逆引き */
 const TYPE_LABEL_TO_CODE: Record<string, string> = Object.fromEntries(
-  Object.entries(TYPE_CODE_TO_LABEL).map(([code, label]) => [label, code])
+  Object.entries(TYPE_CODE_TO_LABEL).map(([code, label]) => [label, code]),
 );
 
 /**

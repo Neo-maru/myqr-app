@@ -9,7 +9,12 @@ import { TagButtonGroup } from "../components/ui/TagButton";
 import { ThemeColorPicker } from "../components/ui/ThemeColorPicker";
 import { getStoredToken, getStoredUserId } from "../hooks/useLocalUser";
 import { useThemeColor } from "../hooks/useThemeColor";
-import { PERSONAL_COLORS, SKIN_CONCERNS, FACE_TYPES, toTypeCode } from "../constants/typeMaster";
+import {
+  PERSONAL_COLORS,
+  SKIN_CONCERNS,
+  FACE_TYPES,
+  toTypeCode,
+} from "../constants/typeMaster";
 
 export function Edit() {
   const navigate = useNavigate();
@@ -36,7 +41,12 @@ export function Edit() {
         const rawSkin = u.skin_concern;
         const skinArr =
           typeof rawSkin === "string"
-            ? (rawSkin ? rawSkin.split(",").map((s) => toTypeCode(s.trim())).filter(Boolean) : [])
+            ? rawSkin
+              ? rawSkin
+                  .split(",")
+                  .map((s) => toTypeCode(s.trim()))
+                  .filter(Boolean)
+              : []
             : Array.isArray(rawSkin)
               ? rawSkin.map((s) => toTypeCode(s)).filter(Boolean)
               : rawSkin != null
@@ -61,20 +71,29 @@ export function Edit() {
 
     if (!token) return;
     try {
-      await updateUser(Number(userId), {
-        name: name.trim(),
-        personal_color: personal_color ?? undefined,
-        skin_concern: skin_concern || undefined,
-        face_type: face_type || undefined,
-        memo: memo.trim() || undefined,
-      }, token);
+      await updateUser(
+        Number(userId),
+        {
+          name: name.trim(),
+          personal_color: personal_color ?? undefined,
+          skin_concern: skin_concern || undefined,
+          face_type: face_type || undefined,
+          memo: memo.trim() || undefined,
+        },
+        token,
+      );
       navigate("/qr", { replace: true });
     } catch (err) {
       console.error(err);
     }
   };
 
-  if (loading) return <PageWrapper><p style={{ color: "var(--muted)" }}>読み込み中...</p></PageWrapper>;
+  if (loading)
+    return (
+      <PageWrapper>
+        <p style={{ color: "var(--muted)" }}>読み込み中...</p>
+      </PageWrapper>
+    );
 
   return (
     <PageWrapper>
@@ -82,7 +101,14 @@ export function Edit() {
 
       <form onSubmit={handleSubmit}>
         <div style={{ marginBottom: "var(--spacing)" }}>
-          <label style={{ display: "block", marginBottom: 4, fontSize: "14px", color: "var(--muted)" }}>
+          <label
+            style={{
+              display: "block",
+              marginBottom: 4,
+              fontSize: "14px",
+              color: "var(--muted)",
+            }}
+          >
             表示名 <span style={{ color: "var(--primary)" }}> *必須</span>
           </label>
           <Input
@@ -93,7 +119,14 @@ export function Edit() {
           />
         </div>
         <div style={{ marginBottom: "var(--spacing)" }}>
-          <label style={{ display: "block", marginBottom: 4, fontSize: "14px", color: "var(--muted)" }}>
+          <label
+            style={{
+              display: "block",
+              marginBottom: 4,
+              fontSize: "14px",
+              color: "var(--muted)",
+            }}
+          >
             パーソナルカラー
           </label>
           <TagButtonGroup
@@ -103,7 +136,14 @@ export function Edit() {
           />
         </div>
         <div style={{ marginBottom: "var(--spacing)" }}>
-          <label style={{ display: "block", marginBottom: 8, fontSize: "14px", color: "var(--muted)" }}>
+          <label
+            style={{
+              display: "block",
+              marginBottom: 8,
+              fontSize: "14px",
+              color: "var(--muted)",
+            }}
+          >
             肌悩み
           </label>
           <TagButtonGroup
@@ -113,7 +153,14 @@ export function Edit() {
           />
         </div>
         <div style={{ marginBottom: "var(--spacing)" }}>
-          <label style={{ display: "block", marginBottom: 8, fontSize: "14px", color: "var(--muted)" }}>
+          <label
+            style={{
+              display: "block",
+              marginBottom: 8,
+              fontSize: "14px",
+              color: "var(--muted)",
+            }}
+          >
             顔タイプ
           </label>
           <TagButtonGroup
@@ -123,7 +170,14 @@ export function Edit() {
           />
         </div>
         <div style={{ marginBottom: "var(--spacing)" }}>
-          <label style={{ display: "block", marginBottom: 4, fontSize: "14px", color: "var(--muted)" }}>
+          <label
+            style={{
+              display: "block",
+              marginBottom: 4,
+              fontSize: "14px",
+              color: "var(--muted)",
+            }}
+          >
             メモ（100文字以内）
           </label>
           <TextArea
@@ -133,14 +187,27 @@ export function Edit() {
             maxLength={100}
             error={errors.memo}
           />
-          <p style={{ fontSize: "12px", color: "var(--muted)", marginTop: 4 }}>{memo.length}/100</p>
+          <p style={{ fontSize: "12px", color: "var(--muted)", marginTop: 4 }}>
+            {memo.length}/100
+          </p>
         </div>
 
         <div style={{ marginBottom: "var(--spacing)" }}>
-          <label style={{ display: "block", marginBottom: 8, fontSize: "14px", color: "var(--muted)" }}>
+          <label
+            style={{
+              display: "block",
+              marginBottom: 8,
+              fontSize: "14px",
+              color: "var(--muted)",
+            }}
+          >
             テーマカラー
           </label>
-          <ThemeColorPicker value={themeId} onChange={setThemeId} themeName={themeName} />
+          <ThemeColorPicker
+            value={themeId}
+            onChange={setThemeId}
+            themeName={themeName}
+          />
         </div>
 
         <PrimaryButton type="submit" style={{ width: "100%" }}>

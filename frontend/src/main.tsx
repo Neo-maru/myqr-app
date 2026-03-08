@@ -10,5 +10,5 @@ applyThemeById(getStoredThemeId() ?? getDefaultPreset().id);
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <App />
-  </StrictMode>
+  </StrictMode>,
 );
