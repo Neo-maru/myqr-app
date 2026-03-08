@@ -16,7 +16,7 @@ def store_get(db: Session = Depends(get_db)):
     log_debug("store_get result", store)
     if store is None:
         log_debug("store_get error", "Store not found")
-        raise HTTPException(status_code=404, detail="Store not found")
+        error_response(404, "Store not found")
 
     response = StoreGetResponse(
         id=store.id,

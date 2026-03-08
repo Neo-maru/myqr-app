@@ -16,6 +16,7 @@ def user_get(req: UserGetRequest, db: Session = Depends(get_db)):
     user = get_user_by_token(db, req.token)
 
     if not user:
+        log_debug("user_get error", "User not found")
         error_response(404, "User not found")
 
     return UserGetResponse(
