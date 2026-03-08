@@ -1,4 +1,4 @@
-from models.all_models import Recommendation, Product
+from models.all_models import Product
 import uuid
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
