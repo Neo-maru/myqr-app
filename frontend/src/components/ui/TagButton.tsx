@@ -19,7 +19,9 @@ export function TagButton({
       style={{
         padding: "8px 16px",
         borderRadius: "var(--btn-radius)",
-        border: selected ? "2px solid var(--primary)" : "1px solid var(--border)",
+        border: selected
+          ? "2px solid var(--primary)"
+          : "1px solid var(--border)",
         background: selected ? "var(--primary-light)" : "var(--surface)",
         color: selected ? "var(--primary-dark)" : "var(--text)",
         fontSize: "14px",
@@ -35,7 +37,7 @@ interface TagButtonGroupProps {
   options: { value: string; label: string }[];
   value: string | string[] | null;
   multiple?: boolean;
-  onChange: (value: string | string[]) => void;
+  onChange: (value: string | string[] | null) => void;
 }
 
 export function TagButtonGroup({
@@ -50,10 +52,13 @@ export function TagButtonGroup({
   const handleClick = (v: string) => {
     if (multiple) {
       const current = Array.isArray(value) ? value : value ? [value] : [];
-      const next = current.includes(v) ? current.filter((x) => x !== v) : [...current, v];
+      const next = current.includes(v)
+        ? current.filter((x) => x !== v)
+        : [...current, v];
       onChange(next);
     } else {
-      onChange(v);
+      // 単一選択: 同じ項目を再度クリックしたら未選択にする
+      onChange(value === v ? null : v);
     }
   };
 

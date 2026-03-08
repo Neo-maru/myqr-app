@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getUserByToken, postRecommendation } from "../api/client";
+import { getStores, getUserByToken, postRecommendation } from "../api/client";
 import { PageWrapper } from "../components/layout/PageWrapper";
 import { AppHeader } from "../components/layout/AppHeader";
-import { PrimaryButton } from "../components/ui/Button";
 import { Card } from "../components/ui/Card";
 import { toTypeLabel } from "../constants/typeMaster";
 
@@ -35,7 +34,6 @@ export function StaffView() {
     name: string;
     personal_color?: string;
     skin_concern?: string;
-    desired_image?: string;
     face_type?: string;
     memo?: string;
   } | null>(null);
@@ -45,9 +43,18 @@ export function StaffView() {
     アイシャドウ: Product[];
   }>({ 下地: [], リップ: [], アイシャドウ: [] });
   const [submittingId, setSubmittingId] = useState<number | null>(null);
+  const [storeName, setStoreName] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     if (!token) return;
+    getStores()
+      .then((stores) => setStoreName(stores[0]?.store_name ?? null))
+      .catch((err) => {
+        console.warn(
+          "店舗情報の取得に失敗しました（store/get が 404 の場合は run_seeds で store を投入してください）",
+          err,
+        );
+      });
     getUserByToken(token)
       .then((res) => {
         setUser({
@@ -55,11 +62,20 @@ export function StaffView() {
           name: res.name,
           personal_color: res.personal_color ?? undefined,
           skin_concern: res.skin_concern ?? undefined,
-          desired_image: res.desired_image ?? res.face_type ?? undefined,
-          face_type: res.face_type ?? res.desired_image ?? undefined,
+          face_type: res.face_type ?? undefined,
           memo: res.memo ?? undefined,
         });
-        const toProduct = (p: { product_id: number; product_name: string; brand: string; price: number; type_name?: unknown; is_recommendation?: boolean }, category: string): Product => ({
+        const toProduct = (
+          p: {
+            product_id: number;
+            product_name: string;
+            brand: string;
+            price: number;
+            type_name?: unknown;
+            is_recommendation?: boolean;
+          },
+          category: string,
+        ): Product => ({
           id: p.product_id,
           name: p.product_name,
           brand: p.brand,
@@ -71,7 +87,9 @@ export function StaffView() {
         setProductsByCategory({
           下地: (res.base_info ?? []).map((p) => toProduct(p, "下地")),
           リップ: (res.lip_info ?? []).map((p) => toProduct(p, "リップ")),
-          アイシャドウ: (res.shadow_info ?? []).map((p) => toProduct(p, "アイシャドウ")),
+          アイシャドウ: (res.shadow_info ?? []).map((p) =>
+            toProduct(p, "アイシャドウ"),
+          ),
         });
       })
       .catch((err: unknown) => console.error(err));
@@ -83,9 +101,15 @@ export function StaffView() {
     try {
       await postRecommendation({ user_id: user.id, product_id: productId });
       setProductsByCategory((prev) => ({
-        下地: prev.下地.map((p) => (p.id === productId ? { ...p, is_recommendation: true } : p)),
-        リップ: prev.リップ.map((p) => (p.id === productId ? { ...p, is_recommendation: true } : p)),
-        アイシャドウ: prev.アイシャドウ.map((p) => (p.id === productId ? { ...p, is_recommendation: true } : p)),
+        下地: prev.下地.map((p) =>
+          p.id === productId ? { ...p, is_recommendation: true } : p,
+        ),
+        リップ: prev.リップ.map((p) =>
+          p.id === productId ? { ...p, is_recommendation: true } : p,
+        ),
+        アイシャドウ: prev.アイシャドウ.map((p) =>
+          p.id === productId ? { ...p, is_recommendation: true } : p,
+        ),
       }));
     } catch (err) {
       console.error(err);
@@ -98,34 +122,74 @@ export function StaffView() {
 
   return (
     <PageWrapper>
-      <AppHeader title="SunQ" staff />
+      <AppHeader title="SunQ" storeName={storeName} staff />
       {user ? (
         <>
           {/* 顧客情報 */}
           <Card style={{ marginBottom: "var(--spacing)" }}>
-            <h2 style={{ fontFamily: "var(--serif-font)", marginBottom: 16 }}>{user.name}</h2>
+            <h2 style={{ fontFamily: "var(--serif-font)", marginBottom: 16 }}>
+              {user.name}
+            </h2>
             <dl style={{ margin: 0 }}>
               {user.personal_color && (
                 <>
-                  <dt style={{ fontSize: "12px", color: "var(--muted)", marginBottom: 4 }}>パーソナルカラー</dt>
-                  <dd style={{ margin: "0 0 12px" }}>{toTypeLabel(user.personal_color)}</dd>
+                  <dt
+                    style={{
+                      fontSize: "12px",
+                      color: "var(--muted)",
+                      marginBottom: 4,
+                    }}
+                  >
+                    パーソナルカラー
+                  </dt>
+                  <dd style={{ margin: "0 0 12px" }}>
+                    {toTypeLabel(user.personal_color)}
+                  </dd>
                 </>
               )}
               {user.skin_concern && (
                 <>
-                  <dt style={{ fontSize: "12px", color: "var(--muted)", marginBottom: 4 }}>肌悩み</dt>
-                  <dd style={{ margin: "0 0 12px" }}>{toTypeLabel(user.skin_concern)}</dd>
+                  <dt
+                    style={{
+                      fontSize: "12px",
+                      color: "var(--muted)",
+                      marginBottom: 4,
+                    }}
+                  >
+                    肌悩み
+                  </dt>
+                  <dd style={{ margin: "0 0 12px" }}>
+                    {toTypeLabel(user.skin_concern)}
+                  </dd>
                 </>
               )}
-              {(user.desired_image ?? user.face_type) && (
+              {user.face_type && (
                 <>
-                  <dt style={{ fontSize: "12px", color: "var(--muted)", marginBottom: 4 }}>顔タイプ</dt>
-                  <dd style={{ margin: "0 0 12px" }}>{toTypeLabel(user.desired_image ?? user.face_type)}</dd>
+                  <dt
+                    style={{
+                      fontSize: "12px",
+                      color: "var(--muted)",
+                      marginBottom: 4,
+                    }}
+                  >
+                    顔タイプ
+                  </dt>
+                  <dd style={{ margin: "0 0 12px" }}>
+                    {toTypeLabel(user.face_type)}
+                  </dd>
                 </>
               )}
               {user.memo && (
                 <>
-                  <dt style={{ fontSize: "12px", color: "var(--muted)", marginBottom: 4 }}>メモ</dt>
+                  <dt
+                    style={{
+                      fontSize: "12px",
+                      color: "var(--muted)",
+                      marginBottom: 4,
+                    }}
+                  >
+                    メモ
+                  </dt>
                   <dd style={{ margin: "0 0 12px" }}>{user.memo}</dd>
                 </>
               )}
@@ -134,7 +198,13 @@ export function StaffView() {
 
           {/* 商品提案（カテゴリ別カルーセル） */}
           <section style={{ marginTop: "var(--spacing)" }}>
-            <h3 style={{ fontFamily: "var(--serif-font)", fontSize: "18px", marginBottom: 8 }}>
+            <h3
+              style={{
+                fontFamily: "var(--serif-font)",
+                fontSize: "18px",
+                marginBottom: 8,
+              }}
+            >
               商品を提案する
             </h3>
             {(["下地", "リップ", "アイシャドウ"] as const).map((category) => {
@@ -142,7 +212,14 @@ export function StaffView() {
               if (!categoryProducts?.length) return null;
               return (
                 <div key={category} style={{ marginBottom: "var(--spacing)" }}>
-                  <h4 style={{ fontSize: "14px", color: "var(--muted)", marginBottom: 8, fontWeight: 500 }}>
+                  <h4
+                    style={{
+                      fontSize: "14px",
+                      color: "var(--muted)",
+                      marginBottom: 8,
+                      fontWeight: 500,
+                    }}
+                  >
                     {category}
                   </h4>
                   <div
@@ -169,7 +246,15 @@ export function StaffView() {
                           flexDirection: "column",
                         }}
                       >
-                        <div style={{ aspectRatio: "1", background: "var(--surface-alt)", position: "relative", flexShrink: 0 }}>
+                        <div
+                          style={{
+                            aspectRatio: "1",
+                            background: "var(--surface-alt)",
+                            position: "relative",
+                            flexShrink: 0,
+                            overflow: "hidden",
+                          }}
+                        >
                           {CATEGORY_IMAGES[p.category] ? (
                             <img
                               src={CATEGORY_IMAGES[p.category]}
@@ -179,6 +264,7 @@ export function StaffView() {
                                 height: "100%",
                                 objectFit: "contain",
                                 display: "block",
+                                background: "var(--surface-alt)",
                               }}
                             />
                           ) : (
@@ -205,18 +291,54 @@ export function StaffView() {
                             minHeight: 88,
                           }}
                         >
-                          <div style={{ fontWeight: 500, fontSize: "14px", marginBottom: 2 }}>{p.name}</div>
-                          <div style={{ fontSize: "12px", color: "var(--muted)" }}>
+                          <div
+                            style={{
+                              fontWeight: 500,
+                              fontSize: "14px",
+                              marginBottom: 2,
+                            }}
+                          >
+                            {p.name}
+                          </div>
+                          <div
+                            style={{ fontSize: "12px", color: "var(--muted)" }}
+                          >
                             {p.brand} / ¥{p.price.toLocaleString()}
                           </div>
-                          <PrimaryButton
+                          <button
                             type="button"
-                            style={{ width: "100%", padding: "8px 12px", fontSize: "14px", marginTop: "auto" }}
-                            disabled={submittingId === p.id || p.is_recommendation}
+                            disabled={
+                              submittingId === p.id || p.is_recommendation
+                            }
                             onClick={() => handlePropose(p.id)}
+                            style={{
+                              width: "100%",
+                              padding: "8px 12px",
+                              fontSize: "14px",
+                              marginTop: "auto",
+                              borderRadius: "var(--btn-radius)",
+                              fontWeight: 500,
+                              border: p.is_recommendation
+                                ? "1px solid var(--border)"
+                                : "none",
+                              background: p.is_recommendation
+                                ? "var(--surface-alt)"
+                                : "var(--primary)",
+                              color: p.is_recommendation
+                                ? "var(--muted)"
+                                : "#fff",
+                              cursor:
+                                submittingId === p.id || p.is_recommendation
+                                  ? "default"
+                                  : "pointer",
+                            }}
                           >
-                            {submittingId === p.id ? "送信中..." : p.is_recommendation ? "提案済み" : "提案する"}
-                          </PrimaryButton>
+                            {submittingId === p.id
+                              ? "送信中..."
+                              : p.is_recommendation
+                                ? "提案済み"
+                                : "提案する"}
+                          </button>
                         </div>
                       </Card>
                     ))}
@@ -229,6 +351,17 @@ export function StaffView() {
       ) : (
         <p style={{ color: "var(--muted)" }}>読み込み中...</p>
       )}
+      {/* コピーライト */}
+      <p
+        style={{
+          fontSize: "10px",
+          color: "var(--muted)",
+          margin: "12px 0 0",
+          textAlign: "center",
+        }}
+      >
+        © 2026 Himawari Inc. All rights reserved.
+      </p>
     </PageWrapper>
   );
 }

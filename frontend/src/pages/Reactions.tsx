@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { getRecommendations, postReaction } from "../api/client";
 import { PageWrapper } from "../components/layout/PageWrapper";
 import { AppHeader } from "../components/layout/AppHeader";
@@ -45,7 +44,9 @@ export function Reactions() {
 
   useEffect(() => {
     if (!userId) return;
-    getRecommendations(Number(userId)).then((data) => setItems(data as Recommendation[]));
+    getRecommendations(Number(userId)).then((data) =>
+      setItems(data as Recommendation[]),
+    );
   }, [userId]);
 
   const handleReaction = async (productId: number, reactionType: string) => {
@@ -60,8 +61,8 @@ export function Reactions() {
       });
       setItems((prev) =>
         prev.map((r) =>
-          r.product.id === productId ? { ...r, reaction: nextType } : r
-        )
+          r.product.id === productId ? { ...r, reaction: nextType } : r,
+        ),
       );
     } catch (err) {
       console.error(err);
@@ -75,12 +76,17 @@ export function Reactions() {
 
   return (
     <PageWrapper>
-      <AppHeader title="SunQ" backTo="/qr" />
-      <h2 style={{ fontFamily: "var(--serif-font)", marginBottom: "var(--spacing)" }}>
-        スタッフからのおすすめ
-      </h2>
+      <AppHeader
+        title="SunQ"
+        pageName="スタッフからのおすすめ商品"
+        backTo="/qr"
+      />
       {items.length === 0 ? (
-        <p style={{ color: "var(--muted)" }}>まだおすすめはありません。</p>
+        <p style={{ color: "var(--muted)" }}>
+          まだおすすめはありません。
+          <br />
+          スタッフが商品を提案するとここに表示されます。
+        </p>
       ) : (
         <>
           {byCategory.map(
@@ -127,6 +133,7 @@ export function Reactions() {
                             background: "var(--surface-alt)",
                             position: "relative",
                             flexShrink: 0,
+                            overflow: "hidden",
                           }}
                         >
                           {(CATEGORY_IMAGES[rec.product.category] ?? null) ? (
@@ -138,10 +145,12 @@ export function Reactions() {
                                 height: "100%",
                                 objectFit: "contain",
                                 display: "block",
+                                background: "var(--surface-alt)",
                               }}
                               onError={(e) => {
                                 e.currentTarget.style.display = "none";
-                                const fallback = e.currentTarget.nextElementSibling as HTMLElement;
+                                const fallback = e.currentTarget
+                                  .nextElementSibling as HTMLElement;
                                 if (fallback) fallback.style.display = "flex";
                               }}
                             />
@@ -152,10 +161,13 @@ export function Reactions() {
                               inset: 0,
                               width: "100%",
                               height: "100%",
-                              display: CATEGORY_IMAGES[rec.product.category] ? "none" : "flex",
+                              display: CATEGORY_IMAGES[rec.product.category]
+                                ? "none"
+                                : "flex",
                               alignItems: "center",
                               justifyContent: "center",
                               fontSize: 48,
+                              pointerEvents: "none",
                             }}
                           >
                             <span style={{ lineHeight: 1 }}>💄</span>
@@ -231,15 +243,11 @@ export function Reactions() {
                     ))}
                   </div>
                 </div>
-              )
+              ),
           )}
         </>
       )}
-      <p style={{ marginTop: "var(--spacing)" }}>
-        <Link to="/qr" style={{ color: "var(--primary)" }}>
-          ← QRに戻る
-        </Link>
-      </p>
+      <p style={{ marginTop: "var(--spacing)" }}></p>
     </PageWrapper>
   );
 }
