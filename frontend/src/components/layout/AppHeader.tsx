@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 interface AppHeaderProps {
   title?: string;
   pageName?: string;
+  storeName?: string;
   backTo?: string;
   right?: ReactNode;
   staff?: boolean;
@@ -12,6 +13,7 @@ interface AppHeaderProps {
 export function AppHeader({
   title = "SunQ",
   pageName,
+  storeName,
   backTo,
   right,
   staff,
@@ -22,6 +24,7 @@ export function AppHeader({
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
+        gap: 8,
         padding: "16px 0",
         marginBottom: "var(--spacing)",
         borderBottom: "1px solid var(--border)",
@@ -29,9 +32,20 @@ export function AppHeader({
         top: 0,
         background: "var(--bg)",
         zIndex: 10,
+        flexWrap: "nowrap",
+        minWidth: 0,
       }}
     >
-      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "baseline",
+          gap: 8,
+          flexWrap: "nowrap",
+          minWidth: 0,
+          flexShrink: 0,
+        }}
+      >
         {backTo && (
           <Link
             to={backTo}
@@ -39,6 +53,7 @@ export function AppHeader({
               fontSize: "24px",
               color: "var(--text)",
               textDecoration: "none",
+              flexShrink: 0,
             }}
             aria-label="戻る"
           >
@@ -51,9 +66,11 @@ export function AppHeader({
             fontSize: "26px",
             fontWeight: 400,
             margin: 0,
-            display: "flex",
+            display: "inline-flex",
             alignItems: "baseline",
             gap: 6,
+            flexWrap: "nowrap",
+            flexShrink: 0,
           }}
         >
           {title === "SunQ" ? (
@@ -85,23 +102,53 @@ export function AppHeader({
               </span>
             </>
           )}
+          {staff && (
+            <span
+              style={{
+                fontSize: "11px",
+                padding: "2px 8px",
+                marginLeft: 6,
+                background: "var(--primary-light)",
+                color: "var(--primary-dark)",
+                borderRadius: "var(--btn-radius)",
+                fontWeight: 500,
+                display: "inline-flex",
+                alignItems: "center",
+                alignSelf: "baseline",
+                flexShrink: 0,
+              }}
+            >
+              スタッフ用
+            </span>
+          )}
         </h1>
-        {staff && (
+      </div>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 8,
+          flexShrink: 1,
+          minWidth: 0,
+          justifyContent: "flex-end",
+        }}
+      >
+        {storeName && (
           <span
             style={{
-              fontSize: "11px",
-              padding: "2px 8px",
-              background: "var(--primary-light)",
-              color: "var(--primary-dark)",
-              borderRadius: "var(--btn-radius)",
-              fontWeight: 500,
+              fontSize: "12px",
+              fontFamily: "var(--sans-font)",
+              color: "var(--muted)",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
             }}
           >
-            スタッフ用
+            {storeName}
           </span>
         )}
+        {right}
       </div>
-      {right}
     </header>
   );
 }

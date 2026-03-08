@@ -53,7 +53,7 @@ export function Edit() {
                 ? [toTypeCode(rawSkin)].filter(Boolean)
                 : [];
         setSkin_concern(skinArr[0] ?? "");
-        setFace_type(toTypeCode(u.face_type ?? u.desired_image) ?? "");
+        setFace_type(toTypeCode(u.face_type) ?? "");
         setMemo((u.memo as string) ?? "");
       })
       .catch(() => navigate("/", { replace: true }))
@@ -132,7 +132,7 @@ export function Edit() {
           <TagButtonGroup
             options={[...PERSONAL_COLORS]}
             value={personal_color}
-            onChange={(v) => setPersonal_color(v as string)}
+            onChange={(v) => setPersonal_color(v as string | null)}
           />
         </div>
         <div style={{ marginBottom: "var(--spacing)" }}>
@@ -149,7 +149,7 @@ export function Edit() {
           <TagButtonGroup
             options={[...SKIN_CONCERNS]}
             value={skin_concern}
-            onChange={(v) => setSkin_concern(v as string)}
+            onChange={(v) => setSkin_concern((v as string) ?? "")}
           />
         </div>
         <div style={{ marginBottom: "var(--spacing)" }}>

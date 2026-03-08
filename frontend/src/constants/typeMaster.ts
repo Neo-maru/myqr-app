@@ -30,7 +30,6 @@ export const FACE_TYPES = [
   { value: "SOFT_ELEGANT", label: "ソフトエレガント" },
   { value: "ACTIVE_CUTE", label: "アクティブキュート" },
   { value: "COOL_CASUAL", label: "クールカジュアル" },
-  { value: "", label: "未選択" },
 ] as const;
 
 /** type id → type_code（API が id を返す場合にフォームの value に変換） */

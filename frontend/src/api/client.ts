@@ -27,8 +27,8 @@ async function request<T>(
       "Content-Type": "application/json",
     },
   };
-  if (body !== undefined && method !== "GET") {
-    options.body = JSON.stringify(body);
+  if (method !== "GET") {
+    options.body = JSON.stringify(body ?? {});
   }
   const res = await fetch(url, options);
   if (!res.ok) {
@@ -197,7 +197,6 @@ export async function getUser(
     skin_concern: res.skin_concern ?? undefined,
     memo: res.memo ?? undefined,
     face_type: res.face_type ?? undefined,
-    desired_image: res.face_type ?? undefined,
   } as Record<string, unknown> & { id: number };
 }
 
@@ -206,7 +205,6 @@ export async function registerUser(data: {
   name: string;
   personal_color?: string;
   skin_concern?: string;
-  desired_image?: string;
   face_type?: string;
   memo?: string;
 }): Promise<{ id: number; name: string; token: string; created_at: string }> {
@@ -215,7 +213,7 @@ export async function registerUser(data: {
     personal_color: data.personal_color ?? null,
     skin_concern: data.skin_concern ?? null,
     memo: data.memo ?? null,
-    face_type: data.face_type ?? data.desired_image ?? null,
+    face_type: data.face_type ?? null,
   };
   const res = await request<UserPostResponse>("POST", "/user/user/post", body);
   return {
@@ -236,7 +234,7 @@ export async function updateUser(
     ...data,
     user_id: id,
     token,
-    face_type: data.face_type ?? data.desired_image ?? null,
+    face_type: data.face_type ?? null,
   };
   return request("POST", "/user/user/post", body);
 }
@@ -249,7 +247,6 @@ export async function getUserByToken(token: string): Promise<{
   skin_concern?: string | null;
   memo?: string | null;
   face_type?: string | null;
-  desired_image?: string | null;
   base_info?: UserInfoProduct[];
   shadow_info?: UserInfoProduct[];
   lip_info?: UserInfoProduct[];
@@ -263,7 +260,6 @@ export async function getUserByToken(token: string): Promise<{
     skin_concern: res.skin_concern ?? null,
     memo: res.memo ?? null,
     face_type: res.face_type ?? null,
-    desired_image: res.face_type ?? null,
     base_info: res.base_info ?? [],
     shadow_info: res.shadow_info ?? [],
     lip_info: res.lip_info ?? [],

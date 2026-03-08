@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getUserByToken, postRecommendation } from "../api/client";
+import { getStores, getUserByToken, postRecommendation } from "../api/client";
 import { PageWrapper } from "../components/layout/PageWrapper";
 import { AppHeader } from "../components/layout/AppHeader";
-import { PrimaryButton } from "../components/ui/Button";
 import { Card } from "../components/ui/Card";
 import { toTypeLabel } from "../constants/typeMaster";
 
@@ -35,7 +34,6 @@ export function StaffView() {
     name: string;
     personal_color?: string;
     skin_concern?: string;
-    desired_image?: string;
     face_type?: string;
     memo?: string;
   } | null>(null);
@@ -45,9 +43,18 @@ export function StaffView() {
     アイシャドウ: Product[];
   }>({ 下地: [], リップ: [], アイシャドウ: [] });
   const [submittingId, setSubmittingId] = useState<number | null>(null);
+  const [storeName, setStoreName] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     if (!token) return;
+    getStores()
+      .then((stores) => setStoreName(stores[0]?.store_name ?? null))
+      .catch((err) => {
+        console.warn(
+          "店舗情報の取得に失敗しました（store/get が 404 の場合は run_seeds で store を投入してください）",
+          err,
+        );
+      });
     getUserByToken(token)
       .then((res) => {
         setUser({
@@ -55,8 +62,7 @@ export function StaffView() {
           name: res.name,
           personal_color: res.personal_color ?? undefined,
           skin_concern: res.skin_concern ?? undefined,
-          desired_image: res.desired_image ?? res.face_type ?? undefined,
-          face_type: res.face_type ?? res.desired_image ?? undefined,
+          face_type: res.face_type ?? undefined,
           memo: res.memo ?? undefined,
         });
         const toProduct = (
@@ -116,7 +122,7 @@ export function StaffView() {
 
   return (
     <PageWrapper>
-      <AppHeader title="SunQ" pageName="顧客情報" staff />
+      <AppHeader title="SunQ" storeName={storeName} staff />
       {user ? (
         <>
           {/* 顧客情報 */}
@@ -157,7 +163,7 @@ export function StaffView() {
                   </dd>
                 </>
               )}
-              {(user.desired_image ?? user.face_type) && (
+              {user.face_type && (
                 <>
                   <dt
                     style={{
@@ -169,7 +175,7 @@ export function StaffView() {
                     顔タイプ
                   </dt>
                   <dd style={{ margin: "0 0 12px" }}>
-                    {toTypeLabel(user.desired_image ?? user.face_type)}
+                    {toTypeLabel(user.face_type)}
                   </dd>
                 </>
               )}
@@ -246,6 +252,7 @@ export function StaffView() {
                             background: "var(--surface-alt)",
                             position: "relative",
                             flexShrink: 0,
+                            overflow: "hidden",
                           }}
                         >
                           {CATEGORY_IMAGES[p.category] ? (
@@ -257,6 +264,7 @@ export function StaffView() {
                                 height: "100%",
                                 objectFit: "contain",
                                 display: "block",
+                                background: "var(--surface-alt)",
                               }}
                             />
                           ) : (
@@ -297,25 +305,40 @@ export function StaffView() {
                           >
                             {p.brand} / ¥{p.price.toLocaleString()}
                           </div>
-                          <PrimaryButton
+                          <button
                             type="button"
+                            disabled={
+                              submittingId === p.id || p.is_recommendation
+                            }
+                            onClick={() => handlePropose(p.id)}
                             style={{
                               width: "100%",
                               padding: "8px 12px",
                               fontSize: "14px",
                               marginTop: "auto",
+                              borderRadius: "var(--btn-radius)",
+                              fontWeight: 500,
+                              border: p.is_recommendation
+                                ? "1px solid var(--border)"
+                                : "none",
+                              background: p.is_recommendation
+                                ? "var(--surface-alt)"
+                                : "var(--primary)",
+                              color: p.is_recommendation
+                                ? "var(--muted)"
+                                : "#fff",
+                              cursor:
+                                submittingId === p.id || p.is_recommendation
+                                  ? "default"
+                                  : "pointer",
                             }}
-                            disabled={
-                              submittingId === p.id || p.is_recommendation
-                            }
-                            onClick={() => handlePropose(p.id)}
                           >
                             {submittingId === p.id
                               ? "送信中..."
                               : p.is_recommendation
                                 ? "提案済み"
                                 : "提案する"}
-                          </PrimaryButton>
+                          </button>
                         </div>
                       </Card>
                     ))}

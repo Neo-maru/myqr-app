@@ -28,8 +28,8 @@ export function QRDisplay() {
     name: string;
     personal_color?: string;
     skin_concern?: string;
-    desired_image?: string;
     face_type?: string;
+    memo?: string;
   } | null>(null);
 
   useEffect(() => {
@@ -48,9 +48,8 @@ export function QRDisplay() {
             name: (u as { name?: string }).name ?? "",
             personal_color: (u as { personal_color?: string }).personal_color,
             skin_concern: (u as { skin_concern?: string }).skin_concern,
-            desired_image:
-              (u as { desired_image?: string }).desired_image ??
-              (u as { face_type?: string }).face_type,
+            face_type: (u as { face_type?: string }).face_type,
+            memo: (u as { memo?: string }).memo,
           });
         }
       })
@@ -63,7 +62,13 @@ export function QRDisplay() {
   return (
     <PageWrapper>
       <AppHeader title="SunQ" pageName="マイQRコード" />
-      <div style={{ textAlign: "center", padding: "var(--spacing) 0", paddingTop: 6 }}>
+      <div
+        style={{
+          textAlign: "center",
+          padding: "var(--spacing) 0",
+          paddingTop: 6,
+        }}
+      >
         <p style={{ marginBottom: 8, fontSize: "18px", fontWeight: 500 }}>
           {user?.name ?? "..."} さん
         </p>
@@ -137,29 +142,60 @@ export function QRDisplay() {
             <span
               style={{
                 padding: "6px 12px",
-                background: "var(--surface-alt)",
+                background: "var(--primary-light)",
                 borderRadius: "var(--btn-radius)",
                 fontSize: "14px",
-                color: "var(--muted)",
+                color: "var(--primary-dark)",
               }}
             >
               {toTypeLabel(user.skin_concern)}
             </span>
           )}
-          {(user?.desired_image ?? user?.face_type) && (
+          {user?.face_type && (
             <span
               style={{
                 padding: "6px 12px",
-                background: "var(--surface-alt)",
+                background: "var(--primary-light)",
                 borderRadius: "var(--btn-radius)",
                 fontSize: "14px",
-                color: "var(--muted)",
+                color: "var(--primary-dark)",
               }}
             >
-              {toTypeLabel(user.desired_image ?? user.face_type)}
+              {toTypeLabel(user.face_type)}
             </span>
           )}
         </div>
+        {user?.memo && (
+          <div
+            style={{
+              width: "100%",
+              marginBottom: 32,
+              textAlign: "left",
+            }}
+          >
+            <p
+              style={{
+                marginBottom: 4,
+                fontSize: "12px",
+                color: "var(--muted)",
+                fontWeight: 500,
+              }}
+            >
+              メモ
+            </p>
+            <p
+              style={{
+                margin: 0,
+                fontSize: "14px",
+                color: "var(--text)",
+                whiteSpace: "pre-wrap",
+                lineHeight: 1.5,
+              }}
+            >
+              {user.memo}
+            </p>
+          </div>
+        )}
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           <Link to="/edit">
             <PrimaryButton style={{ width: "100%" }}>

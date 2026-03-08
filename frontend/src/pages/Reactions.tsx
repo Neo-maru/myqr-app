@@ -133,6 +133,7 @@ export function Reactions() {
                             background: "var(--surface-alt)",
                             position: "relative",
                             flexShrink: 0,
+                            overflow: "hidden",
                           }}
                         >
                           {(CATEGORY_IMAGES[rec.product.category] ?? null) ? (
@@ -144,6 +145,7 @@ export function Reactions() {
                                 height: "100%",
                                 objectFit: "contain",
                                 display: "block",
+                                background: "var(--surface-alt)",
                               }}
                               onError={(e) => {
                                 e.currentTarget.style.display = "none";
@@ -165,6 +167,7 @@ export function Reactions() {
                               alignItems: "center",
                               justifyContent: "center",
                               fontSize: 48,
+                              pointerEvents: "none",
                             }}
                           >
                             <span style={{ lineHeight: 1 }}>💄</span>

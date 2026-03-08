@@ -37,7 +37,7 @@ interface TagButtonGroupProps {
   options: { value: string; label: string }[];
   value: string | string[] | null;
   multiple?: boolean;
-  onChange: (value: string | string[]) => void;
+  onChange: (value: string | string[] | null) => void;
 }
 
 export function TagButtonGroup({
@@ -57,7 +57,8 @@ export function TagButtonGroup({
         : [...current, v];
       onChange(next);
     } else {
-      onChange(v);
+      // 単一選択: 同じ項目を再度クリックしたら未選択にする
+      onChange(value === v ? null : v);
     }
   };
 

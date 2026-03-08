@@ -86,7 +86,7 @@ export function Register() {
           <TagButtonGroup
             options={[...PERSONAL_COLORS]}
             value={personal_color}
-            onChange={(v) => setPersonal_color(v as string)}
+            onChange={(v) => setPersonal_color(v as string | null)}
           />
         </div>
         <div style={{ marginBottom: "var(--spacing)" }}>
@@ -103,7 +103,7 @@ export function Register() {
           <TagButtonGroup
             options={[...SKIN_CONCERNS]}
             value={skin_concern}
-            onChange={(v) => setSkin_concern(v as string)}
+            onChange={(v) => setSkin_concern((v as string) ?? "")}
           />
         </div>
         <div style={{ marginBottom: "var(--spacing)" }}>
