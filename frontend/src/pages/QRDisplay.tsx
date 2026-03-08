@@ -4,14 +4,21 @@ import { QRCodeCanvas } from "qrcode.react";
 import { getUser } from "../api/client";
 import { PageWrapper } from "../components/layout/PageWrapper";
 import { AppHeader } from "../components/layout/AppHeader";
-import { SecondaryButton } from "../components/ui/Button";
+import { PrimaryButton } from "../components/ui/Button";
 import { getStoredToken, getStoredUserId } from "../hooks/useLocalUser";
+import { useThemeColor } from "../hooks/useThemeColor";
+import { getPresetById } from "../constants/themeColors";
 import { toTypeLabel } from "../constants/typeMaster";
 
 const baseUrl = import.meta.env.VITE_APP_PUBLIC_URL || import.meta.env.VITE_API_BASE_URL || "";
+const QR_SIZE = 220;
+const LOGO_SIZE = 72;
 
 export function QRDisplay() {
   const navigate = useNavigate();
+  const { themeId } = useThemeColor();
+  const preset = getPresetById(themeId);
+  const qrFgColor = preset?.primary ?? "#c4846a";
   const token = getStoredToken();
   const userId = getStoredUserId();
   const [user, setUser] = useState<{ name: string; personal_color?: string; skin_concern?: string; desired_image?: string; face_type?: string } | null>(null);
@@ -40,10 +47,10 @@ export function QRDisplay() {
 
   return (
     <PageWrapper>
-      <AppHeader title="SunQ" />
+      <AppHeader title="SunQ" pageName="マイQRコード" />
       <div style={{ textAlign: "center", padding: "var(--spacing) 0" }}>
         <p style={{ marginBottom: 8, fontSize: "18px", fontWeight: 500 }}>
-          {user?.name ?? "..."}
+          {user?.name ?? "..."} さん
         </p>
         <div
           style={{
@@ -54,7 +61,40 @@ export function QRDisplay() {
             marginBottom: "var(--spacing)",
           }}
         >
-          <QRCodeCanvas value={qrUrl} size={220} level="M" />
+          <div style={{ position: "relative", display: "inline-block" }}>
+            <QRCodeCanvas
+              value={qrUrl}
+              size={QR_SIZE}
+              level="M"
+              fgColor={qrFgColor}
+              bgColor="#ffffff"
+            />
+            <div
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: LOGO_SIZE,
+                height: LOGO_SIZE,
+                borderRadius: 8,
+                background: "#ffffff",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                boxSizing: "border-box",
+                padding: 6,
+              }}
+            >
+              <img
+                src="/favicon.svg"
+                alt="SunQ"
+                width={LOGO_SIZE}
+                height={LOGO_SIZE}
+                style={{ display: "block" }}
+              />
+            </div>
+          </div>
         </div>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", marginBottom: "var(--spacing)" }}>
           {user?.personal_color && (
@@ -97,14 +137,25 @@ export function QRDisplay() {
             </span>
           )}
         </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           <Link to="/edit">
-            <SecondaryButton style={{ width: "100%" }}>情報を編集する</SecondaryButton>
+            <PrimaryButton style={{ width: "100%" }}>情報を編集する</PrimaryButton>
           </Link>
           <Link to="/reactions">
-            <SecondaryButton style={{ width: "100%" }}>おすすめを見る</SecondaryButton>
+            <PrimaryButton style={{ width: "100%" }}>スタッフからのおすすめ商品を見る</PrimaryButton>
           </Link>
         </div>
+                {/* コピーライト */}
+                <p
+          style={{
+            fontSize: "10px",
+            color: "var(--muted)",
+            margin: "12px 0 0",
+            textAlign: "center",
+          }}
+        >
+          © 2026 Himawari Inc. All rights reserved.
+        </p>
       </div>
     </PageWrapper>
   );

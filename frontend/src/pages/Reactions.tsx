@@ -75,12 +75,9 @@ export function Reactions() {
 
   return (
     <PageWrapper>
-      <AppHeader title="SunQ" backTo="/qr" />
-      <h2 style={{ fontFamily: "var(--serif-font)", marginBottom: "var(--spacing)" }}>
-        スタッフからのおすすめ
-      </h2>
+      <AppHeader title="SunQ" pageName="スタッフからのおすすめ商品" backTo="/qr" />
       {items.length === 0 ? (
-        <p style={{ color: "var(--muted)" }}>まだおすすめはありません。</p>
+        <p style={{ color: "var(--muted)" }}>まだおすすめはありません。<br />スタッフが商品を提案するとここに表示されます。</p>
       ) : (
         <>
           {byCategory.map(
@@ -236,9 +233,6 @@ export function Reactions() {
         </>
       )}
       <p style={{ marginTop: "var(--spacing)" }}>
-        <Link to="/qr" style={{ color: "var(--primary)" }}>
-          ← QRに戻る
-        </Link>
       </p>
     </PageWrapper>
   );

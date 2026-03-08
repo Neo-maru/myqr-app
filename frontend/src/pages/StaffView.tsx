@@ -98,7 +98,7 @@ export function StaffView() {
 
   return (
     <PageWrapper>
-      <AppHeader title="SunQ" staff />
+      <AppHeader title="SunQ" pageName="顧客情報" staff />
       {user ? (
         <>
           {/* 顧客情報 */}
@@ -229,6 +229,18 @@ export function StaffView() {
       ) : (
         <p style={{ color: "var(--muted)" }}>読み込み中...</p>
       )}
+                      {/* コピーライト */}
+                      <p
+          style={{
+            fontSize: "10px",
+            color: "var(--muted)",
+            margin: "12px 0 0",
+            textAlign: "center",
+          }}
+        >
+          © 2026 Himawari Inc. All rights reserved.
+        </p>
+
     </PageWrapper>
   );
 }
