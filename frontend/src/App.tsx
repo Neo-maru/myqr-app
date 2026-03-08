@@ -1,43 +1,20 @@
-import { useState, useEffect } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import QRCode from "qrcode"
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { Landing } from "./pages/Landing";
+import { Register } from "./pages/Register";
+import { Edit } from "./pages/Edit";
+import { QRDisplay } from "./pages/QRDisplay";
+import { Reactions } from "./pages/Reactions";
+import { StaffView } from "./pages/StaffView";
 
-function App() {
-  const [count, setCount] = useState(0)
-  const [qr, setQr] = useState("")
+const router = createBrowserRouter([
+  { path: "/", element: <Landing /> },
+  { path: "/register", element: <Register /> },
+  { path: "/edit", element: <Edit /> },
+  { path: "/qr", element: <QRDisplay /> },
+  { path: "/reactions", element: <Reactions /> },
+  { path: "/users/:token", element: <StaffView /> },
+]);
 
-  useEffect(() => {
-    QRCode.toDataURL("token-abc").then(setQr)
-  }, [])
-
-  return (
-    <>
-      <h1>QRコード</h1>
-      <img src={qr} alt="qr" />
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+export default function App() {
+  return <RouterProvider router={router} />;
 }
-
-export default App

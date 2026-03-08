@@ -1,0 +1,58 @@
+<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="po" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f0d878"/>
+      <stop offset="50%" stop-color="#d4a84b"/>
+      <stop offset="100%" stop-color="#b8860b"/>
+    </linearGradient>
+    <linearGradient id="pi" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f0d878"/>
+      <stop offset="100%" stop-color="#d4a84b"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(32,32) scale(1.35) translate(-32,-32)">
+  <g transform="translate(32,32)">
+    <ellipse cx="0" cy="0" rx="4.5" ry="20" fill="url(#po)" transform="rotate(0)"/>
+    <ellipse cx="0" cy="0" rx="4.5" ry="20" fill="url(#po)" transform="rotate(18)"/>
+    <ellipse cx="0" cy="0" rx="4.5" ry="20" fill="url(#po)" transform="rotate(36)"/>
+    <ellipse cx="0" cy="0" rx="4.5" ry="20" fill="url(#po)" transform="rotate(54)"/>
+    <ellipse cx="0" cy="0" rx="4.5" ry="20" fill="url(#po)" transform="rotate(72)"/>
+    <ellipse cx="0" cy="0" rx="4.5" ry="20" fill="url(#po)" transform="rotate(90)"/>
+    <ellipse cx="0" cy="0" rx="4.5" ry="20" fill="url(#po)" transform="rotate(108)"/>
+    <ellipse cx="0" cy="0" rx="4.5" ry="20" fill="url(#po)" transform="rotate(126)"/>
+    <ellipse cx="0" cy="0" rx="4.5" ry="20" fill="url(#po)" transform="rotate(144)"/>
+    <ellipse cx="0" cy="0" rx="4.5" ry="20" fill="url(#po)" transform="rotate(162)"/>
+    <ellipse cx="0" cy="0" rx="4.5" ry="20" fill="url(#po)" transform="rotate(180)"/>
+    <ellipse cx="0" cy="0" rx="4.5" ry="20" fill="url(#po)" transform="rotate(198)"/>
+    <ellipse cx="0" cy="0" rx="4.5" ry="20" fill="url(#po)" transform="rotate(216)"/>
+    <ellipse cx="0" cy="0" rx="4.5" ry="20" fill="url(#po)" transform="rotate(234)"/>
+    <ellipse cx="0" cy="0" rx="4.5" ry="20" fill="url(#po)" transform="rotate(252)"/>
+    <ellipse cx="0" cy="0" rx="4.5" ry="20" fill="url(#po)" transform="rotate(270)"/>
+    <ellipse cx="0" cy="0" rx="4.5" ry="20" fill="url(#po)" transform="rotate(288)"/>
+    <ellipse cx="0" cy="0" rx="4.5" ry="20" fill="url(#po)" transform="rotate(306)"/>
+    <ellipse cx="0" cy="0" rx="4.5" ry="20" fill="url(#po)" transform="rotate(324)"/>
+    <ellipse cx="0" cy="0" rx="4.5" ry="20" fill="url(#po)" transform="rotate(342)"/>
+  </g>
+  <g transform="translate(32,32)">
+    <ellipse cx="0" cy="0" rx="3.5" ry="12" fill="url(#pi)" transform="rotate(6)"/>
+    <ellipse cx="0" cy="0" rx="3.5" ry="12" fill="url(#pi)" transform="rotate(31.71)"/>
+    <ellipse cx="0" cy="0" rx="3.5" ry="12" fill="url(#pi)" transform="rotate(57.43)"/>
+    <ellipse cx="0" cy="0" rx="3.5" ry="12" fill="url(#pi)" transform="rotate(83.14)"/>
+    <ellipse cx="0" cy="0" rx="3.5" ry="12" fill="url(#pi)" transform="rotate(108.86)"/>
+    <ellipse cx="0" cy="0" rx="3.5" ry="12" fill="url(#pi)" transform="rotate(134.57)"/>
+    <ellipse cx="0" cy="0" rx="3.5" ry="12" fill="url(#pi)" transform="rotate(160.29)"/>
+    <ellipse cx="0" cy="0" rx="3.5" ry="12" fill="url(#pi)" transform="rotate(186)"/>
+    <ellipse cx="0" cy="0" rx="3.5" ry="12" fill="url(#pi)" transform="rotate(211.71)"/>
+    <ellipse cx="0" cy="0" rx="3.5" ry="12" fill="url(#pi)" transform="rotate(237.43)"/>
+    <ellipse cx="0" cy="0" rx="3.5" ry="12" fill="url(#pi)" transform="rotate(263.14)"/>
+    <ellipse cx="0" cy="0" rx="3.5" ry="12" fill="url(#pi)" transform="rotate(288.86)"/>
+    <ellipse cx="0" cy="0" rx="3.5" ry="12" fill="url(#pi)" transform="rotate(314.57)"/>
+    <ellipse cx="0" cy="0" rx="3.5" ry="12" fill="url(#pi)" transform="rotate(340.29)"/>
+  </g>
+  <g transform="translate(32,32)">
+    <rect x="-7" y="-7" width="14" height="14" fill="#5c4033"/>
+    <rect x="-5" y="-5" width="10" height="10" fill="#fff"/>
+    <rect x="-3" y="-3" width="6" height="6" fill="#5c4033"/>
+  </g>
+  </g>
+</svg>
