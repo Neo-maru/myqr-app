@@ -6,17 +6,20 @@ import { AppHeader } from "../components/layout/AppHeader";
 import { Input, TextArea } from "../components/ui/Input";
 import { PrimaryButton } from "../components/ui/Button";
 import { TagButtonGroup } from "../components/ui/TagButton";
+import { ThemeColorPicker } from "../components/ui/ThemeColorPicker";
 import { getStoredToken, getStoredUserId } from "../hooks/useLocalUser";
+import { useThemeColor } from "../hooks/useThemeColor";
 import { PERSONAL_COLORS, SKIN_CONCERNS, FACE_TYPES, toTypeCode } from "../constants/typeMaster";
 
 export function Edit() {
   const navigate = useNavigate();
+  const { themeId, themeName, setThemeId } = useThemeColor();
   const userId = getStoredUserId();
   const [loading, setLoading] = useState(true);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [name, setName] = useState("");
   const [personal_color, setPersonal_color] = useState<string | null>(null);
-  const [skin_concern, setSkin_concern] = useState<string[]>([]);
+  const [skin_concern, setSkin_concern] = useState<string>("");
   const [face_type, setFace_type] = useState<string>("");
   const [memo, setMemo] = useState("");
 
@@ -31,15 +34,15 @@ export function Edit() {
         setName((u.name as string) ?? "");
         setPersonal_color(toTypeCode(u.personal_color) || null);
         const rawSkin = u.skin_concern;
-        setSkin_concern(
+        const skinArr =
           typeof rawSkin === "string"
             ? (rawSkin ? rawSkin.split(",").map((s) => toTypeCode(s.trim())).filter(Boolean) : [])
             : Array.isArray(rawSkin)
               ? rawSkin.map((s) => toTypeCode(s)).filter(Boolean)
               : rawSkin != null
                 ? [toTypeCode(rawSkin)].filter(Boolean)
-                : []
-        );
+                : [];
+        setSkin_concern(skinArr[0] ?? "");
         setFace_type(toTypeCode(u.face_type ?? u.desired_image) ?? "");
         setMemo((u.memo as string) ?? "");
       })
@@ -61,7 +64,7 @@ export function Edit() {
       await updateUser(Number(userId), {
         name: name.trim(),
         personal_color: personal_color ?? undefined,
-        skin_concern: skin_concern.length ? skin_concern.join(",") : undefined,
+        skin_concern: skin_concern || undefined,
         face_type: face_type || undefined,
         memo: memo.trim() || undefined,
       }, token);
@@ -75,20 +78,17 @@ export function Edit() {
 
   return (
     <PageWrapper>
-      <AppHeader title="SunQ" backTo="/qr" />
-      <h2 style={{ fontFamily: "var(--serif-font)", marginBottom: "var(--spacing)" }}>
-        ユーザー情報編集
-      </h2>
+      <AppHeader title="SunQ" pageName="編集" backTo="/qr" />
 
       <form onSubmit={handleSubmit}>
         <div style={{ marginBottom: "var(--spacing)" }}>
           <label style={{ display: "block", marginBottom: 4, fontSize: "14px", color: "var(--muted)" }}>
-            表示名 <span style={{ color: "var(--primary)" }}>*</span>
+            表示名 <span style={{ color: "var(--primary)" }}> *必須</span>
           </label>
           <Input
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="例: みう"
+            placeholder="例: ひまわり"
             error={errors.name}
           />
         </div>
@@ -104,13 +104,12 @@ export function Edit() {
         </div>
         <div style={{ marginBottom: "var(--spacing)" }}>
           <label style={{ display: "block", marginBottom: 8, fontSize: "14px", color: "var(--muted)" }}>
-            肌悩み（複数選択可）
+            肌悩み
           </label>
           <TagButtonGroup
             options={[...SKIN_CONCERNS]}
             value={skin_concern}
-            multiple
-            onChange={(v) => setSkin_concern(v as string[])}
+            onChange={(v) => setSkin_concern(v as string)}
           />
         </div>
         <div style={{ marginBottom: "var(--spacing)" }}>
@@ -135,6 +134,13 @@ export function Edit() {
             error={errors.memo}
           />
           <p style={{ fontSize: "12px", color: "var(--muted)", marginTop: 4 }}>{memo.length}/100</p>
+        </div>
+
+        <div style={{ marginBottom: "var(--spacing)" }}>
+          <label style={{ display: "block", marginBottom: 8, fontSize: "14px", color: "var(--muted)" }}>
+            テーマカラー
+          </label>
+          <ThemeColorPicker value={themeId} onChange={setThemeId} themeName={themeName} />
         </div>
 
         <PrimaryButton type="submit" style={{ width: "100%" }}>

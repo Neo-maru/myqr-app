@@ -6,11 +6,14 @@ import { AppHeader } from "../components/layout/AppHeader";
 import { Input, TextArea } from "../components/ui/Input";
 import { PrimaryButton } from "../components/ui/Button";
 import { TagButtonGroup } from "../components/ui/TagButton";
+import { ThemeColorPicker } from "../components/ui/ThemeColorPicker";
 import { setStoredUser } from "../hooks/useLocalUser";
+import { useThemeColor } from "../hooks/useThemeColor";
 import { PERSONAL_COLORS, SKIN_CONCERNS, FACE_TYPES } from "../constants/typeMaster";
 
 export function Register() {
   const navigate = useNavigate();
+  const { themeId, themeName, setThemeId } = useThemeColor();
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [name, setName] = useState("");
   const [personal_color, setPersonal_color] = useState<string | null>(null);
@@ -43,20 +46,17 @@ export function Register() {
 
   return (
     <PageWrapper>
-      <AppHeader title="SunQ" />
-      <h2 style={{ fontFamily: "var(--serif-font)", marginBottom: "var(--spacing)" }}>
-        ユーザー情報登録
-      </h2>
+      <AppHeader title="SunQ" pageName="新規登録" />
 
       <form onSubmit={handleSubmit}>
         <div style={{ marginBottom: "var(--spacing)" }}>
           <label style={{ display: "block", marginBottom: 4, fontSize: "14px", color: "var(--muted)" }}>
-            表示名 <span style={{ color: "var(--primary)" }}>*</span>
+            表示名 <span style={{ color: "var(--primary)" }}> *必須</span>
           </label>
           <Input
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="例: みう"
+            placeholder="例: ひまわり"
             error={errors.name}
           />
         </div>
@@ -104,6 +104,16 @@ export function Register() {
           />
           <p style={{ fontSize: "12px", color: "var(--muted)", marginTop: 4 }}>{memo.length}/100</p>
         </div>
+
+        <div style={{ marginBottom: "var(--spacing)" }}>
+          <label style={{ display: "block", marginBottom: 8, fontSize: "14px", color: "var(--muted)" }}>
+            テーマカラー
+          </label>
+          <ThemeColorPicker value={themeId} onChange={setThemeId} themeName={themeName} />
+        </div>
+
+  
+          <p style={{ color: "var(--primary-dark)", fontSize: "14px", marginBottom: 8 }}/>
 
         <PrimaryButton type="submit" fullWidth style={{ width: "100%", marginTop: 8 }}>
           登録する
