@@ -4,7 +4,7 @@ from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from api.v1.utils.log_utils import log_debug
-from api.v1.utils.db_utils import get_products_by_category_id, get_types_from_code, get_product_tags
+from api.v1.utils.db_utils import get_products_by_category_id, get_type_by_id, get_types_from_code, get_product_tags
 
 def create_uuid():
     return str(uuid.uuid4())
@@ -47,25 +47,35 @@ def recommend_products(db: Session, user, category):
 
         # 商品タグ取得
         tag_records = get_product_tags(db, product.id)
-        tags = [t.type_id for t in tag_records]
+
+        tag_ids = []
+        tag_names = []
+
+        for t in tag_records:
+            tag_ids.append(t.type_id)
+
+            type_obj = get_type_by_id(db, t.type_id)
+            if type_obj:
+                tag_names.append(type_obj.type_name)
+
         log_debug("product tags", {
             "product_id": product.id,
             "product_name": product.product_name,
-            "tags": tags
+            "tags": tag_names
         })
 
         # パーソナルカラー
-        if personal_color_id and personal_color_id in tags:
+        if personal_color_id and personal_color_id in tag_ids:
             score += 3
             matched_tags.append(personal_color_id)
 
         # 肌悩み
-        if skin_concern_id and skin_concern_id in tags:
+        if skin_concern_id and skin_concern_id in tag_ids:
             score += 2
             matched_tags.append(skin_concern_id)
 
         # 顔タイプ
-        if face_type_id and face_type_id in tags:
+        if face_type_id and face_type_id in tag_ids:
             score += 1
             matched_tags.append(face_type_id)
 
@@ -75,7 +85,7 @@ def recommend_products(db: Session, user, category):
             "matched_tags": matched_tags
         })
 
-        scored.append((score, product, matched_tags))
+        scored.append((score, product, tag_names))
 
     # スコア順に並び替え
     scored.sort(key=lambda x: x[0], reverse=True)
@@ -88,11 +98,12 @@ def recommend_products(db: Session, user, category):
             Product.category == category,
             Product.store_recommend == 1
         ).limit(3).all()
+
         return [(p, ["店舗おすすめ"]) for p in store_products]
 
     # 上位3件
     result = []
-    for score, product, matched_tags in scored[:3]:
-        result.append((product, matched_tags))
+    for score, product, tag_names in scored[:3]:
+        result.append((product, tag_names))
 
     return result
