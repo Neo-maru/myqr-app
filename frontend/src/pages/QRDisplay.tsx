@@ -63,7 +63,7 @@ export function QRDisplay() {
   return (
     <PageWrapper>
       <AppHeader title="SunQ" pageName="マイQRコード" />
-      <div style={{ textAlign: "center", padding: "var(--spacing) 0" }}>
+      <div style={{ textAlign: "center", padding: "var(--spacing) 0", paddingTop: 6 }}>
         <p style={{ marginBottom: 8, fontSize: "18px", fontWeight: 500 }}>
           {user?.name ?? "..."} さん
         </p>
@@ -163,7 +163,7 @@ export function QRDisplay() {
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           <Link to="/edit">
             <PrimaryButton style={{ width: "100%" }}>
-              情報を編集する
+              登録情報を編集する
             </PrimaryButton>
           </Link>
           <Link to="/reactions">
