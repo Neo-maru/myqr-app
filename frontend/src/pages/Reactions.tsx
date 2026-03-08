@@ -1,9 +1,14 @@
 import { useEffect, useState } from "react";
-import { getRecommendations, postReaction } from "../api/client";
+import {
+  getRecommendations,
+  getStores,
+  postReaction,
+} from "../api/client";
 import { PageWrapper } from "../components/layout/PageWrapper";
 import { AppHeader } from "../components/layout/AppHeader";
 import { Card } from "../components/ui/Card";
 import { getStoredUserId } from "../hooks/useLocalUser";
+import { toTypeLabel } from "../constants/typeMaster";
 
 import hiyakedomeImg from "../assets/hiyakedome_cream.png";
 import kuchibeniImg from "../assets/kuchibeni.png";
@@ -41,22 +46,29 @@ const CATEGORY_ORDER = ["下地", "リップ", "アイシャドウ"] as const;
 export function Reactions() {
   const userId = getStoredUserId();
   const [items, setItems] = useState<Recommendation[]>([]);
+  const [storeId, setStoreId] = useState<number | null>(null);
 
   useEffect(() => {
     if (!userId) return;
     getRecommendations(Number(userId)).then((data) =>
       setItems(data as Recommendation[]),
     );
+    getStores().then((stores) => {
+      if (stores[0]) {
+        setStoreId(stores[0].id);
+      }
+    });
   }, [userId]);
 
   const handleReaction = async (productId: number, reactionType: string) => {
-    if (!userId) return;
+    if (!userId || storeId == null) return;
     const current = items.find((r) => r.product.id === productId);
     const nextType = current?.reaction === reactionType ? null : reactionType;
     try {
       await postReaction({
         user_id: Number(userId),
         product_id: productId,
+        store_id: storeId,
         reaction: nextType,
       });
       setItems((prev) =>
@@ -195,12 +207,38 @@ export function Reactions() {
                             style={{
                               fontSize: "12px",
                               color: "var(--muted)",
-                              marginBottom: 8,
+                              marginBottom: 4,
                             }}
                           >
                             {rec.product.brand} / ¥
                             {rec.product.price.toLocaleString()}
                           </div>
+                          {rec.product.tags &&
+                            rec.product.tags.length > 0 && (
+                              <div
+                                style={{
+                                  display: "flex",
+                                  flexWrap: "wrap",
+                                  gap: 4,
+                                  marginBottom: 8,
+                                  fontSize: "11px",
+                                  color: "var(--muted)",
+                                }}
+                              >
+                                {rec.product.tags.map((tag) => (
+                                  <span
+                                    key={tag}
+                                    style={{
+                                      padding: "2px 6px",
+                                      background: "var(--surface-alt)",
+                                      borderRadius: "var(--btn-radius)",
+                                    }}
+                                  >
+                                    {toTypeLabel(tag)}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
                           <div
                             style={{
                               display: "flex",

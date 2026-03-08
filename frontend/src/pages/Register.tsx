@@ -41,7 +41,7 @@ export function Register() {
         face_type: face_type || undefined,
         memo: memo.trim() || undefined,
       });
-      setStoredUser(res.token, res.id);
+      setStoredUser(res.token, res.id, res.qr_id);
       navigate("/qr", { replace: true });
     } catch (err) {
       console.error(err);

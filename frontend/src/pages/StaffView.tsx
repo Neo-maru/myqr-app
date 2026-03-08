@@ -44,11 +44,17 @@ export function StaffView() {
   }>({ 下地: [], リップ: [], アイシャドウ: [] });
   const [submittingId, setSubmittingId] = useState<number | null>(null);
   const [storeName, setStoreName] = useState<string | undefined>(undefined);
+  const [storeId, setStoreId] = useState<number | null>(null);
 
   useEffect(() => {
     if (!token) return;
     getStores()
-      .then((stores) => setStoreName(stores[0]?.store_name ?? null))
+      .then((stores) => {
+        if (stores[0]) {
+          setStoreName(stores[0].store_name ?? null);
+          setStoreId(stores[0].id);
+        }
+      })
       .catch((err) => {
         console.warn(
           "店舗情報の取得に失敗しました（store/get が 404 の場合は run_seeds で store を投入してください）",
@@ -69,20 +75,25 @@ export function StaffView() {
           p: {
             product_id: number;
             product_name: string;
-            brand: string;
+            brand: string | number;
             price: number;
             type_name?: unknown;
+            product_tags?: unknown;
             is_recommendation?: boolean;
           },
           category: string,
         ): Product => ({
           id: p.product_id,
           name: p.product_name,
-          brand: p.brand,
+          brand: typeof p.brand === "string" ? p.brand : String(p.brand ?? ""),
           price: p.price,
           category,
           is_recommendation: p.is_recommendation,
-          type_name: Array.isArray(p.type_name) ? p.type_name : undefined,
+          type_name: Array.isArray(p.product_tags)
+            ? (p.product_tags as string[])
+            : Array.isArray(p.type_name)
+              ? (p.type_name as string[])
+              : undefined,
         });
         setProductsByCategory({
           下地: (res.base_info ?? []).map((p) => toProduct(p, "下地")),
@@ -96,19 +107,30 @@ export function StaffView() {
   }, [token]);
 
   const handlePropose = async (productId: number) => {
-    if (!user) return;
+    if (!user || storeId == null) return;
+    const current = [
+      ...productsByCategory.下地,
+      ...productsByCategory.リップ,
+      ...productsByCategory.アイシャドウ,
+    ].find((p) => p.id === productId);
+    const isCurrentlyRecommended = current?.is_recommendation ?? false;
     setSubmittingId(productId);
     try {
-      await postRecommendation({ user_id: user.id, product_id: productId });
+      await postRecommendation({
+        user_id: user.id,
+        product_id: productId,
+        store_id: storeId,
+      });
+      const nextRecommended = !isCurrentlyRecommended;
       setProductsByCategory((prev) => ({
         下地: prev.下地.map((p) =>
-          p.id === productId ? { ...p, is_recommendation: true } : p,
+          p.id === productId ? { ...p, is_recommendation: nextRecommended } : p,
         ),
         リップ: prev.リップ.map((p) =>
-          p.id === productId ? { ...p, is_recommendation: true } : p,
+          p.id === productId ? { ...p, is_recommendation: nextRecommended } : p,
         ),
         アイシャドウ: prev.アイシャドウ.map((p) =>
-          p.id === productId ? { ...p, is_recommendation: true } : p,
+          p.id === productId ? { ...p, is_recommendation: nextRecommended } : p,
         ),
       }));
     } catch (err) {
@@ -301,15 +323,43 @@ export function StaffView() {
                             {p.name}
                           </div>
                           <div
-                            style={{ fontSize: "12px", color: "var(--muted)" }}
+                            style={{
+                              fontSize: "12px",
+                              color: "var(--muted)",
+                              marginBottom: p.type_name?.length ? 6 : 0,
+                            }}
                           >
-                            {p.brand} / ¥{p.price.toLocaleString()}
+                            {toTypeLabel(p.brand) || String(p.brand ?? "")} / ¥
+                            {p.price.toLocaleString()}
                           </div>
+                          {p.type_name && p.type_name.length > 0 && (
+                            <div
+                              style={{
+                                display: "flex",
+                                flexWrap: "wrap",
+                                gap: 4,
+                                marginBottom: 8,
+                                fontSize: "11px",
+                                color: "var(--muted)",
+                              }}
+                            >
+                              {p.type_name.map((tag) => (
+                                <span
+                                  key={tag}
+                                  style={{
+                                    padding: "2px 6px",
+                                    background: "var(--surface-alt)",
+                                    borderRadius: "var(--btn-radius)",
+                                  }}
+                                >
+                                  {toTypeLabel(tag)}
+                                </span>
+                              ))}
+                            </div>
+                          )}
                           <button
                             type="button"
-                            disabled={
-                              submittingId === p.id || p.is_recommendation
-                            }
+                            disabled={submittingId === p.id}
                             onClick={() => handlePropose(p.id)}
                             style={{
                               width: "100%",
@@ -328,15 +378,13 @@ export function StaffView() {
                                 ? "var(--muted)"
                                 : "#fff",
                               cursor:
-                                submittingId === p.id || p.is_recommendation
-                                  ? "default"
-                                  : "pointer",
+                                submittingId === p.id ? "default" : "pointer",
                             }}
                           >
                             {submittingId === p.id
                               ? "送信中..."
                               : p.is_recommendation
-                                ? "提案済み"
+                                ? "提案を取り消す"
                                 : "提案する"}
                           </button>
                         </div>

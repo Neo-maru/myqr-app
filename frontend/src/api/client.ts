@@ -77,6 +77,7 @@ type CategoryProduct = {
   price: number;
   type_id?: string[] | unknown;
   type_name?: string[] | unknown;
+  product_tags?: string[];
   reaction?: string | null;
   is_recommendation?: boolean;
 };
@@ -155,11 +156,14 @@ function flattenRecommendations(res: RecommendationGetResponse): Array<{
     const category = CATEGORY_MAP[key];
     if (!Array.isArray(list)) continue;
     for (const p of list) {
-      const tags = Array.isArray(p.type_id)
-        ? p.type_id
-        : Array.isArray(p.type_name)
-          ? p.type_name
-          : undefined;
+      const tags =
+        Array.isArray(p.product_tags) && p.product_tags.length > 0
+          ? p.product_tags
+          : Array.isArray(p.type_id)
+            ? p.type_id
+            : Array.isArray(p.type_name)
+              ? p.type_name
+              : undefined;
       const reaction = p.reaction ?? null;
       out.push({
         id: p.product_id,
@@ -207,7 +211,13 @@ export async function registerUser(data: {
   skin_concern?: string;
   face_type?: string;
   memo?: string;
-}): Promise<{ id: number; name: string; token: string; created_at: string }> {
+}): Promise<{
+  id: number;
+  name: string;
+  token: string;
+  qr_id?: string;
+  created_at: string;
+}> {
   const body: Record<string, unknown> = {
     name: data.name,
     personal_color: data.personal_color ?? null,
@@ -220,6 +230,7 @@ export async function registerUser(data: {
     id: res.user_id,
     name: res.name,
     token: res.token,
+    qr_id: res.qr_id,
     created_at: new Date().toISOString(),
   };
 }
@@ -299,6 +310,7 @@ export async function getRecommendations(userId: number): Promise<
 export async function postRecommendation(data: {
   user_id: number;
   product_id: number;
+  store_id: number;
 }): Promise<void> {
   await request(
     "POST",
@@ -311,6 +323,7 @@ export async function postRecommendation(data: {
 export async function postReaction(data: {
   user_id: number;
   product_id: number;
+  store_id: number;
   reaction: string | null;
 }): Promise<void> {
   await request(

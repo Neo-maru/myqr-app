@@ -5,7 +5,11 @@ import { getUser } from "../api/client";
 import { PageWrapper } from "../components/layout/PageWrapper";
 import { AppHeader } from "../components/layout/AppHeader";
 import { PrimaryButton } from "../components/ui/Button";
-import { getStoredToken, getStoredUserId } from "../hooks/useLocalUser";
+import {
+  getStoredToken,
+  getStoredUserId,
+  getStoredQrId,
+} from "../hooks/useLocalUser";
 import { useThemeColor } from "../hooks/useThemeColor";
 import { getPresetById } from "../constants/themeColors";
 import { toTypeLabel } from "../constants/typeMaster";
@@ -57,7 +61,7 @@ export function QRDisplay() {
   }, [userId, token, navigate]);
 
   if (!token || !userId) return null;
-  const qrUrl = `${baseUrl}/users/${token}`;
+  const qrUrl = `${baseUrl}/users/${getStoredQrId() || token}`;
 
   return (
     <PageWrapper>

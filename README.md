@@ -1,73 +1,87 @@
-# React + TypeScript + Vite
+# MyQR App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 事前準備
 
-Currently, two official plugins are available:
+以下がインストールされていること:
+- Node.js
+- npm
+- Python3（Windows: python）
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## 初回セットアップ
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 1. .envファイルを作成
 
-## Expanding the ESLint configuration
+プロジェクトルートに`.env`ファイルを作成し、必要な環境変数を設定してください。
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 2. バックエンドのセットアップ
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+bash
+cd backend
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+#### 仮想環境の作成・起動
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+**Mac/Linux:**
+bash
+python3 -m venv venv
+source venv/bin/activate
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+**Windows:**
+bash
+python -m venv venv
+venv\Scripts\activate
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+#### ライブラリのインストール
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+bash
+pip install -r requirements.txt
+
+#### テーブル構築
+
+bash
+python init_db.py
+
+#### テストデータ投入
+
+bash
+python run_seeds.py
+
+---
+
+## 毎回の起動手順
+
+### フロントエンド
+
+bash
+cd frontend
+npm run dev
+
+### バックエンド
+
+#### 1. 仮想環境の起動（未起動の場合のみ）
+
+**Mac/Linux:**
+bash
+cd backend
+source venv/bin/activate
+
+**Windows:**
+bash
+cd backend
+venv\Scripts\activate
+
+#### 2. サーバー起動
+
+bash
+uvicorn main:app --reload
+
+#### 3. 終了後
+
+bash
+deactivate
+
+---
+
+## アクセスURL
+- https://sunq-frontend.onrender.com/
