@@ -40,6 +40,7 @@ export function PrimaryButton({
         borderRadius: "var(--btn-radius)",
         padding: "12px 24px",
         fontWeight: 500,
+        fontSize: "16px",
         ...style,
       }}
       {...props}
